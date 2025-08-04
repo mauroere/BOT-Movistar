@@ -10,7 +10,6 @@ const FLUJO_BIENVENIDA_MIRO = {
   welcome: {
     messages: [
       "¡Hola! Te doy la bienvenida a mi canal de atención de *Movistar Empresas*. 🤖",
-      "Por consultas sobre facturación, trámites o compra de packs, contactate con la persona autorizada o titular de tu empresa. 📋",
     ],
     options: [
       { text: "TOP / Empresas", action: "top_empresas" },
