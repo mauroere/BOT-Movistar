@@ -282,7 +282,10 @@ class WhatsAppBot {
           break;
         case "conectar_asesor_titular":
           this.showMessage("🔄 Conectando con tu asesor comercial...", "bot");
-          this.showMessage("👤 **Asesor disponible** - Te atenderá en un momento.", "bot");
+          this.showMessage(
+            "👤 **Asesor disponible** - Te atenderá en un momento.",
+            "bot"
+          );
           break;
         case "top_robo":
           this.executeFlow("top_robo");

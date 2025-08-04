@@ -42,8 +42,14 @@ const FLUJO_BIENVENIDA_MIRO = {
       "¿En qué horario necesitás atención?",
     ],
     options: [
-      { text: "Dentro de horario de atención", action: "top_titular_dentro_horario" },
-      { text: "Fuera de horario de atención", action: "top_titular_fuera_horario" },
+      {
+        text: "Dentro de horario de atención",
+        action: "top_titular_dentro_horario",
+      },
+      {
+        text: "Fuera de horario de atención",
+        action: "top_titular_fuera_horario",
+      },
       { text: "🔙 Volver", action: "top_empresas" },
     ],
   },
@@ -96,9 +102,7 @@ const FLUJO_BIENVENIDA_MIRO = {
   // TOP EMPRESAS - USUARIO - SEGUNDO MENSAJE
   // ========================================
   top_usuario_segundo_menu: {
-    messages: [
-      "También podés consultar detalles de tu plan y consumos:",
-    ],
+    messages: ["También podés consultar detalles de tu plan y consumos:"],
     options: [
       { text: "Mi plan", action: "top_usuario_mi_plan" },
       { text: "Consumo de datos", action: "top_usuario_consumo_datos" },
@@ -129,7 +133,10 @@ const FLUJO_BIENVENIDA_MIRO = {
       "¿Qué gestión comercial necesitás realizar?",
     ],
     options: [
-      { text: "Consultar servicios", action: "top_usuario_consultar_servicios" },
+      {
+        text: "Consultar servicios",
+        action: "top_usuario_consultar_servicios",
+      },
       { text: "Modificar plan", action: "top_usuario_modificar_plan" },
       { text: "Agregar servicios", action: "top_usuario_agregar_servicios" },
       { text: "🔙 Volver", action: "top_usuario" },
@@ -398,7 +405,10 @@ const FLUJO_BIENVENIDA_MIRO = {
     options: [
       { text: "Hablar con asesoría", action: "pool_movil_hablar_asesoria" },
       { text: "Facturas y pagos", action: "pool_movil_facturas_pagos" },
-      { text: "Plan, datos y roaming", action: "pool_movil_plan_datos_roaming" },
+      {
+        text: "Plan, datos y roaming",
+        action: "pool_movil_plan_datos_roaming",
+      },
       { text: "Ayuda técnica", action: "pool_movil_ayuda_tecnica" },
       { text: "Contratar servicios", action: "pool_movil_contratar_servicios" },
       { text: "Celulares y chips", action: "pool_movil_celulares_chips" },
@@ -435,12 +445,27 @@ const FLUJO_BIENVENIDA_MIRO = {
       "Ver opciones",
     ],
     options: [
-      { text: "Hablar con asesor/a", action: "personalizado_titular_hablar_asesor" },
-      { text: "Facturas y pagos", action: "personalizado_titular_facturas_pagos" },
-      { text: "Plan, datos y roaming", action: "personalizado_titular_plan_datos_roaming" },
+      {
+        text: "Hablar con asesor/a",
+        action: "personalizado_titular_hablar_asesor",
+      },
+      {
+        text: "Facturas y pagos",
+        action: "personalizado_titular_facturas_pagos",
+      },
+      {
+        text: "Plan, datos y roaming",
+        action: "personalizado_titular_plan_datos_roaming",
+      },
       { text: "Ayuda técnica", action: "personalizado_titular_ayuda_tecnica" },
-      { text: "Contratar servicios", action: "personalizado_titular_contratar_servicios" },
-      { text: "Celulares y chips", action: "personalizado_titular_celulares_chips" },
+      {
+        text: "Contratar servicios",
+        action: "personalizado_titular_contratar_servicios",
+      },
+      {
+        text: "Celulares y chips",
+        action: "personalizado_titular_celulares_chips",
+      },
       { text: "Más opciones", action: "personalizado_titular_mas_opciones" },
       { text: "🔙 Volver", action: "premium_personalizado" },
     ],
@@ -454,8 +479,14 @@ const FLUJO_BIENVENIDA_MIRO = {
       "Por favor, aguardame un momento y te transfiero con un representante Comercial. 😊",
     ],
     options: [
-      { text: "Dentro de horario (LU-VI 9-18)", action: "personalizado_titular_dentro_horario" },
-      { text: "Fuera de horario", action: "personalizado_titular_fuera_horario" },
+      {
+        text: "Dentro de horario (LU-VI 9-18)",
+        action: "personalizado_titular_dentro_horario",
+      },
+      {
+        text: "Fuera de horario",
+        action: "personalizado_titular_fuera_horario",
+      },
     ],
   },
 
@@ -466,7 +497,10 @@ const FLUJO_BIENVENIDA_MIRO = {
       "Un representante comercial te atenderá en breve. 😊",
     ],
     options: [
-      { text: "👤 Conectar con Asesor Comercial", action: "conectar_asesor_comercial_personalizado" },
+      {
+        text: "👤 Conectar con Asesor Comercial",
+        action: "conectar_asesor_comercial_personalizado",
+      },
     ],
   },
 
@@ -480,10 +514,19 @@ const FLUJO_BIENVENIDA_MIRO = {
       "Mientras tanto, se ofrece ayuda automática con estos temas:",
     ],
     options: [
-      { text: "Facturas y pagos", action: "personalizado_titular_facturas_pagos" },
-      { text: "Plan, datos y roaming", action: "personalizado_titular_plan_datos_roaming" },
+      {
+        text: "Facturas y pagos",
+        action: "personalizado_titular_facturas_pagos",
+      },
+      {
+        text: "Plan, datos y roaming",
+        action: "personalizado_titular_plan_datos_roaming",
+      },
       { text: "Ayuda técnica", action: "personalizado_titular_ayuda_tecnica" },
-      { text: "Robo o pérdida de equipo", action: "personalizado_titular_robo_perdida" },
+      {
+        text: "Robo o pérdida de equipo",
+        action: "personalizado_titular_robo_perdida",
+      },
       { text: "Menú principal", action: "personalizado_titular" },
     ],
   },
@@ -598,13 +641,31 @@ const FLUJO_BIENVENIDA_MIRO = {
       "Ver opciones",
     ],
     options: [
-      { text: "Facturas y pagos 📄", action: "personalizado_usuario_facturas_pagos" },
-      { text: "Plan, datos y roaming 🌐", action: "personalizado_usuario_plan_datos_roaming" },
-      { text: "Celulares y chips 📱", action: "personalizado_usuario_celulares_chips" },
-      { text: "Ayuda técnica 🛠", action: "personalizado_usuario_ayuda_tecnica" },
-      { text: "Contratar servicios 🛍", action: "personalizado_usuario_contratar_servicios" },
+      {
+        text: "Facturas y pagos 📄",
+        action: "personalizado_usuario_facturas_pagos",
+      },
+      {
+        text: "Plan, datos y roaming 🌐",
+        action: "personalizado_usuario_plan_datos_roaming",
+      },
+      {
+        text: "Celulares y chips 📱",
+        action: "personalizado_usuario_celulares_chips",
+      },
+      {
+        text: "Ayuda técnica 🛠",
+        action: "personalizado_usuario_ayuda_tecnica",
+      },
+      {
+        text: "Contratar servicios 🛍",
+        action: "personalizado_usuario_contratar_servicios",
+      },
       { text: "Beneficios 🎁", action: "personalizado_usuario_beneficios" },
-      { text: "Robo o pérdida de equipo", action: "personalizado_usuario_robo_perdida" },
+      {
+        text: "Robo o pérdida de equipo",
+        action: "personalizado_usuario_robo_perdida",
+      },
       { text: "Baja", action: "personalizado_usuario_baja" },
       { text: "Más opciones", action: "personalizado_usuario_mas_opciones" },
       { text: "🔙 Volver", action: "premium_personalizado" },
@@ -695,8 +756,14 @@ const FLUJO_BIENVENIDA_MIRO = {
       "• Upgrade gratuito de velocidad",
     ],
     options: [
-      { text: "Ver todos los beneficios", action: "todos_beneficios_personalizado" },
-      { text: "Activar promociones", action: "activar_promociones_personalizado" },
+      {
+        text: "Ver todos los beneficios",
+        action: "todos_beneficios_personalizado",
+      },
+      {
+        text: "Activar promociones",
+        action: "activar_promociones_personalizado",
+      },
       { text: "🔙 Volver", action: "personalizado_usuario" },
     ],
   },
@@ -714,7 +781,10 @@ const FLUJO_BIENVENIDA_MIRO = {
       "🔒 **Bloquearemos la línea inmediatamente**",
     ],
     options: [
-      { text: "Confirmar bloqueo", action: "confirmar_bloqueo_usuario_personalizado" },
+      {
+        text: "Confirmar bloqueo",
+        action: "confirmar_bloqueo_usuario_personalizado",
+      },
       { text: "Más información", action: "info_robo_usuario_personalizado" },
       { text: "🔙 Volver", action: "personalizado_usuario" },
     ],
@@ -803,7 +873,7 @@ const FLUJO_BIENVENIDA_MIRO = {
       "",
       "📋 **Información necesaria:**",
       "• Número de línea afectada",
-      "• Fecha y hora aproximada del incidente", 
+      "• Fecha y hora aproximada del incidente",
       "• Número de denuncia policial (si corresponde)",
       "",
       "🔒 **Acciones inmediatas:**",
