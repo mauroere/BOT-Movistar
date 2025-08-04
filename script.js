@@ -187,14 +187,8 @@ class WhatsAppBot {
         // Consulta empresarial
         this.executeFlow("business");
       } else {
-        // Respuesta genérica que activa el menú principal
-        this.addMessage(
-          "¡Hola! Soy tu asistente virtual de Movistar Empresas. 🤖"
-        );
-        setTimeout(() => {
-          this.addMessage("¿En qué puedo ayudarte hoy?");
-          setTimeout(() => this.executeFlow("welcome"), 1000);
-        }, 1000);
+        // Respuesta genérica que activa el menú principal directamente
+        setTimeout(() => this.executeFlow("welcome"), 1000);
       }
     }, 1500);
   }
@@ -693,7 +687,8 @@ class WhatsAppBot {
         );
         break;
       case "returning_customer":
-        this.addMessage("¡Hola de nuevo! ¿En qué puedo ayudarte hoy?");
+        // Cliente que regresa - ir directo al menú principal
+        this.executeFlow("welcome");
         break;
       case "urgent_support":
         this.addMessage(
