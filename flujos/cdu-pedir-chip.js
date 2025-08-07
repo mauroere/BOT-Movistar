@@ -75,7 +75,45 @@ const cduPedirChip = {
       "Por favor, escribime el nombre y apellido de la persona autorizada para recibir el chip.\n👆 Tiene que ser mayor de 18 años.",
     ],
     options: [
-      { text: "Continuar", action: "pedir_chip_transferir" },
+      { text: "Continuar", action: "pedir_chip_dni" },
+    ],
+  },
+
+  pedir_chip_dni: {
+    messages: [
+      "¡Anotado! ✍\n\nPor favor, escribime el número de DNI de la persona que recibirá el chip.\nEscribí solo números, por ejemplo: _31222333_.",
+    ],
+    options: [
+      { text: "Continuar", action: "pedir_chip_celular" },
+    ],
+  },
+
+  pedir_chip_celular: {
+    messages: [
+      "¡Estamos terminando! 😁\nPor último, dejame un celular de contacto. Escribilo con código de área, sin cero ni 15. Por ejemplo: _1122223333_",
+    ],
+    options: [
+      { text: "Continuar", action: "pedir_chip_confirmacion_final" },
+    ],
+  },
+
+  pedir_chip_confirmacion_final: {
+    messages: [
+      "¡Listo! Ya tengo todos los datos. 🥳 \nVas a recibir tu chip dentro los próximos 10 días hábiles, según tu ubicación. No te olvides de tener el DNI a mano. ☺\n\nPara conocer el estado de tu envío, podés escribirme _seguir mi chip_. Si no lo recibís en ese tiempo o tenés algún problema, contactate con tu representante comercial.\n\n¿Te ayudo con algo más?",
+    ],
+    options: [
+      { text: "Eso es todo, gracias", action: "pedir_chip_despedida" },
+      { text: "Pedir otro chip", action: "menu_pedir_chip" },
+      { text: "Menu principal", action: "menu_principal" },
+    ],
+  },
+
+  pedir_chip_despedida: {
+    messages: [
+      "¡Fue un placer ayudarte! 😊\n\nEstoy acá para lo que necesites. ¡Hasta la próxima! 👋",
+    ],
+    options: [
+      { text: "Menu principal", action: "menu_principal" },
     ],
   },
 
