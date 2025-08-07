@@ -1,0 +1,46 @@
+﻿
+  // Dejar mensaje registrado
+  factura_dejar_mensaje: {
+    messages: [
+      " **Dejar Mensaje**\n\n¿Qué tipo de consulta querés dejar registrada?\n\n **Opciones disponibles:**\n Consulta de facturación\n Problema con pagos\n Reclamo técnico\n Consulta general"
+    ],
+    options: [
+      { text: "Consulta de facturación", action: "factura_mensaje_registrado" },
+      { text: "Problema con pagos", action: "factura_mensaje_registrado" },
+      { text: "Reclamo técnico", action: "factura_mensaje_registrado" },
+      { text: "Consulta general", action: "factura_mensaje_registrado" },
+      { text: "Volver", action: "factura_fuera_horario_comercial" },
+    ],
+  },
+
+  // Callback confirmado - final
+  factura_callback_confirmado: {
+    messages: [
+      " **Callback Confirmado**\n\n **Te vamos a llamar en el horario acordado**\n\n Asegurate de tener tu teléfono disponible\n Un asesor especializado se va a comunicar con vos\n Vas a recibir un SMS de confirmación\n\n **Recordatorio:** Te llegará una notificación 5 minutos antes"
+    ],
+    options: [
+      { text: "Entendido", action: "factura_callback_final" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },
+
+  // Mensaje registrado exitosamente
+  factura_mensaje_registrado: {
+    messages: [
+      " **Mensaje Registrado**\n\n **Tu consulta fue registrada exitosamente**\n\n **Número de caso:** #FAC-2025-0001\n **Fecha:** 5 de agosto de 2025\n **Respuesta estimada:** 24-48 horas\n\n **Vas a recibir actualizaciones por:**\n SMS al número de esta línea\n Email (si está configurado)"
+    ],
+    options: [
+      { text: "Entendido", action: "factura_mensaje_final" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback final - despedida
+  factura_callback_final: {
+    messages: [
+      " **Todo Listo**\n\n¡Que tengas buen día! Un asesor se va a comunicar con vos en el horario acordado.\n\n **Tip:** Mantené cerca los datos de tu cuenta para agilizar la consulta."
+    ],
+    options: [
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },

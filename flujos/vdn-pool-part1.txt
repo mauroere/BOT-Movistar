@@ -1,0 +1,38 @@
+﻿  //=== FLUJOS VDN POOL NO Y HORARIO COMERCIAL ===//
+  // VDN Pool NO - Flujo de validación y derivación  
+  factura_vdn_pool_no: {
+    messages: [
+      " **Validación VDN Pool**\n\nEl sistema está verificando el estado del VDN Pool..."
+    ],
+    options: [
+      { text: "Dentro de horario comercial", action: "factura_dentro_horario_comercial" },
+      { text: "Fuera de horario comercial", action: "factura_fuera_horario_comercial" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },
+
+  // Dentro de horario comercial - FLUJO NO
+  factura_dentro_horario_comercial: {
+    messages: [
+      " **Horario Comercial Activo**\n\nEstás dentro del horario comercial pero el VDN Pool no está disponible.\n\n¿Cómo querés continuar?"
+    ],
+    options: [
+      { text: "Hablar con asesor", action: "factura_derivar_asesor_comercial" },
+      { text: "Usar Mi Movistar", action: "factura_usar_mi_movistar" },
+      { text: "Callback programado", action: "factura_callback_programado" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },
+
+  // Fuera de horario comercial - FLUJO NO
+  factura_fuera_horario_comercial: {
+    messages: [
+      " **Fuera de Horario Comercial**\n\n **Horarios de atención:**\n Lunes a Viernes: 8:00 a 20:00\n Sábados: 9:00 a 17:00\n Domingos: Cerrado\n\n¿Qué querés hacer?"
+    ],
+    options: [
+      { text: "Callback para mañana", action: "factura_callback_manana" },
+      { text: "Usar Mi Movistar", action: "factura_usar_mi_movistar" },
+      { text: "Dejar mensaje", action: "factura_dejar_mensaje" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },

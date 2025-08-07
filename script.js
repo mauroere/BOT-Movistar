@@ -49,8 +49,62 @@ class WhatsAppBot {
   }
 
   initBotFlows() {
-    // Retornar objeto vacío - los flujos se cargarán desde flujo-bienvenida-miro.js
+    // Los flujos se cargarán dinámicamente desde los archivos CDU
     return {};
+  }
+
+  // Cargar dinámicamente los CDUs disponibles
+  async loadCDUs() {
+    try {
+      // Cargar CDU de Bienvenida
+      if (typeof FLUJO_BIENVENIDA_MIRO !== "undefined") {
+        Object.assign(this.botFlows, FLUJO_BIENVENIDA_MIRO);
+      }
+
+      // Cargar CDU de Factura con Botonera
+      if (typeof CDU_FACTURA_BOTONERA !== "undefined") {
+        Object.assign(this.botFlows, CDU_FACTURA_BOTONERA);
+      }
+
+      // Cargar CDU de Contratar Servicios
+      if (typeof CDU_CONTRATAR_SERVICIOS !== "undefined") {
+        Object.assign(this.botFlows, CDU_CONTRATAR_SERVICIOS);
+      }
+
+      // Cargar CDU de Celulares y Chips
+      if (typeof CDU_CELULARES_CHIPS !== "undefined") {
+        Object.assign(this.botFlows, CDU_CELULARES_CHIPS);
+      }
+
+      // Cargar CDU de Beneficios
+      if (typeof CDU_BENEFICIOS !== "undefined") {
+        Object.assign(this.botFlows, CDU_BENEFICIOS);
+      }
+
+      // Cargar CDU de Plan x Botonera
+      if (typeof CDU_PLAN_BOTONERA !== "undefined") {
+        Object.assign(this.botFlows, CDU_PLAN_BOTONERA);
+      }
+
+      // Cargar CDU de Factura de esta línea
+      if (typeof cduFacturaEstaLinea !== "undefined") {
+        Object.assign(this.botFlows, cduFacturaEstaLinea);
+      }
+
+      // Cargar CDU de Cambio de SIM/eSIM
+      if (typeof cduCambioSim !== "undefined") {
+        Object.assign(this.botFlows, cduCambioSim);
+      }
+
+      // Cargar CDU de Pedir Chip
+      if (typeof cduPedirChip !== "undefined") {
+        Object.assign(this.botFlows, cduPedirChip);
+      }
+
+      console.log("✅ CDUs cargados:", Object.keys(this.botFlows));
+    } catch (error) {
+      console.error("Error cargando CDUs:", error);
+    }
   }
 
   sendMessage() {
@@ -447,7 +501,481 @@ class WhatsAppBot {
           this.executeFlow("hablar_asesoria");
           break;
 
-        // Facturas y pagos - subflujos
+        // Facturas y pagos - NUEVO CDU
+        case "facturacion_cuit":
+          this.executeFlow("facturacion_cuit");
+          break;
+        case "seleccion_linea_cuit":
+          this.executeFlow("seleccion_linea_cuit");
+          break;
+        case "sin_habilitacion_cuit":
+          this.executeFlow("sin_habilitacion_cuit");
+          break;
+        case "como_seguimos":
+          this.executeFlow("como_seguimos");
+          break;
+        case "accion_sobre_esta_linea":
+          this.executeFlow("accion_sobre_esta_linea");
+          break;
+        case "accion_otra_linea":
+          this.executeFlow("accion_otra_linea");
+          break;
+        case "descargar_factura_pdf":
+          this.executeFlow("descargar_factura_pdf");
+          break;
+        case "enviar_factura_email":
+          this.executeFlow("enviar_factura_email");
+          break;
+        case "config_debito_automatico":
+          this.executeFlow("config_debito_automatico");
+          break;
+        case "reclamo_monto":
+          this.executeFlow("reclamo_monto");
+          break;
+
+        // Contratar Servicios - NUEVO CDU
+        case "menu_servicios":
+          this.executeFlow("menu_servicios");
+          break;
+        case "asignar_comercial":
+          this.executeFlow("asignar_comercial");
+          break;
+        case "espera_direccion_cliente":
+          this.executeFlow("espera_direccion_cliente");
+          break;
+        case "procesar_direccion":
+          this.executeFlow("procesar_direccion");
+          break;
+        case "linea_no_habilitada":
+          this.executeFlow("linea_no_habilitada");
+          break;
+        case "conectar_comercial_servicios":
+          this.executeFlow("conectar_comercial_servicios");
+          break;
+        case "solicitar_llamada_comercial":
+          this.executeFlow("solicitar_llamada_comercial");
+          break;
+        case "en_espera_comercial":
+          this.executeFlow("en_espera_comercial");
+          break;
+        case "programar_llamada_hoy":
+          this.executeFlow("programar_llamada_hoy");
+          break;
+        case "programar_llamada_manana":
+          this.executeFlow("programar_llamada_manana");
+          break;
+        case "cancelar_espera_comercial":
+          this.executeFlow("cancelar_espera_comercial");
+          break;
+        case "fin_proceso_comercial":
+          this.executeFlow("fin_proceso_comercial");
+          break;
+        case "contactar_titular_empresa":
+          this.executeFlow("contactar_titular_empresa");
+          break;
+        case "continuar_por_chat":
+          this.executeFlow("continuar_por_chat");
+          break;
+        case "fin_conversacion":
+          this.executeFlow("fin_conversacion");
+          break;
+        case "espera_chat_comercial":
+          this.executeFlow("espera_chat_comercial");
+          break;
+
+        // Beneficios - NUEVO CDU
+        case "menu_beneficios":
+          this.executeFlow("menu_beneficios");
+          break;
+        case "menu_beneficios_premium":
+          this.executeFlow("menu_beneficios_premium");
+          break;
+        case "beneficio_club_movistar":
+          this.executeFlow("beneficio_club_movistar");
+          break;
+        case "fundacion_telefonica":
+          this.executeFlow("fundacion_telefonica");
+          break;
+        case "test_drive_gigas":
+          this.executeFlow("test_drive_gigas");
+          break;
+        case "gestionar_gigas":
+          this.executeFlow("gestionar_gigas");
+          break;
+        case "oferta_fibra":
+          this.executeFlow("oferta_fibra");
+          break;
+        case "modalidades_cursos":
+          this.executeFlow("modalidades_cursos");
+          break;
+        case "pasar_gigas":
+          this.executeFlow("pasar_gigas");
+          break;
+        case "guardar_gigas":
+          this.executeFlow("guardar_gigas");
+          break;
+        case "activar_test_drive":
+          this.executeFlow("activar_test_drive");
+          break;
+        case "todos_descuentos_club":
+          this.executeFlow("todos_descuentos_club");
+          break;
+        case "consultar_disponibilidad_fibra":
+          this.executeFlow("consultar_disponibilidad_fibra");
+          break;
+        case "cursos_programacion":
+          this.executeFlow("cursos_programacion");
+          break;
+        case "cursos_marketing":
+          this.executeFlow("cursos_marketing");
+          break;
+        case "activar_guardado_automatico":
+          this.executeFlow("activar_guardado_automatico");
+          break;
+        case "ver_consumo_tiempo_real":
+          this.executeFlow("ver_consumo_tiempo_real");
+          break;
+        case "activar_descuentos_seleccionados":
+          this.executeFlow("activar_descuentos_seleccionados");
+          break;
+        case "ver_vigencias_descuentos":
+          this.executeFlow("ver_vigencias_descuentos");
+          break;
+        case "ingresar_direccion_fibra":
+          this.executeFlow("ingresar_direccion_fibra");
+          break;
+        case "llamar_consulta_fibra":
+          this.executeFlow("llamar_consulta_fibra");
+          break;
+        case "cursos_habilidades":
+          this.executeFlow("cursos_habilidades");
+          break;
+        case "activar_beneficios_club":
+          this.executeFlow("activar_beneficios_club");
+          break;
+        case "descargar_app_movistar":
+          this.executeFlow("descargar_app_movistar");
+          break;
+        case "info_test_drive":
+          this.executeFlow("info_test_drive");
+          break;
+        case "terminos_test_drive":
+          this.executeFlow("terminos_test_drive");
+          break;
+        case "ver_consumo_gigas":
+          this.executeFlow("ver_consumo_gigas");
+          break;
+        case "comprar_gigas_extra":
+          this.executeFlow("comprar_gigas_extra");
+          break;
+        case "contactar_comercial_fibra":
+          this.executeFlow("contactar_comercial_fibra");
+          break;
+        case "detalles_oferta_fibra":
+          this.executeFlow("detalles_oferta_fibra");
+          break;
+        case "ingresar_numero_destino":
+          this.executeFlow("ingresar_numero_destino");
+          break;
+        case "ver_saldo_disponible":
+          this.executeFlow("ver_saldo_disponible");
+          break;
+        case "historial_gb_guardados":
+          this.executeFlow("historial_gb_guardados");
+          break;
+        case "desactivar_guardado":
+          this.executeFlow("desactivar_guardado");
+          break;
+        case "configurar_guardado":
+          this.executeFlow("configurar_guardado");
+          break;
+        case "ver_saldo_total_gb":
+          this.executeFlow("ver_saldo_total_gb");
+          break;
+        case "actualizar_consumo":
+          this.executeFlow("actualizar_consumo");
+          break;
+        case "configurar_alertas_consumo":
+          this.executeFlow("configurar_alertas_consumo");
+          break;
+        case "consejos_aprovechar_gb":
+          this.executeFlow("consejos_aprovechar_gb");
+          break;
+
+        // Plan x Botonera - NUEVO CDU
+        case "menu_plan_botonera":
+          this.executeFlow("menu_plan_botonera");
+          break;
+        case "menu_plan_botonera_top_emp_usuario":
+          this.executeFlow("menu_plan_botonera_top_emp_usuario");
+          break;
+        case "menu_plan_botonera_premium_titular":
+          this.executeFlow("menu_plan_botonera_premium_titular");
+          break;
+        case "menu_plan_botonera_premium_usuario_full":
+          this.executeFlow("menu_plan_botonera_premium_usuario_full");
+          break;
+        case "menu_plan_botonera_premium_usuario_consumo":
+          this.executeFlow("menu_plan_botonera_premium_usuario_consumo");
+          break;
+        case "menu_plan_botonera_top_emp":
+          this.executeFlow("menu_plan_botonera_top_emp_usuario");
+          break;
+        case "menu_plan_botonera_titular":
+          this.executeFlow("menu_plan_botonera_premium_titular");
+          break;
+        case "menu_plan_botonera_premium_full":
+          this.executeFlow("menu_plan_botonera_premium_usuario_full");
+          break;
+        case "menu_plan_botonera_premium_consumo":
+          this.executeFlow("menu_plan_botonera_premium_usuario_consumo");
+          break;
+
+        // CDU: Factura de esta línea
+        case "menu_factura_esta_linea":
+          this.executeFlow("menu_factura_esta_linea");
+          break;
+        case "info_plan":
+          this.executeFlow("info_plan");
+          break;
+        case "info_planes":
+          this.executeFlow("info_planes");
+          break;
+        case "cambio_plan":
+          this.executeFlow("cambio_plan");
+          break;
+        case "consumos":
+          this.executeFlow("consumos");
+          break;
+        case "comprar_gigas":
+          this.executeFlow("comprar_gigas");
+          break;
+        case "gestion_roaming":
+          this.executeFlow("gestion_roaming");
+          break;
+        case "detalles_plan_completo":
+          this.executeFlow("detalles_plan_completo");
+          break;
+        case "historial_consumo_plan":
+          this.executeFlow("historial_consumo_plan");
+          break;
+        case "modificar_servicios_plan":
+          this.executeFlow("modificar_servicios_plan");
+          break;
+        case "detalles_por_linea":
+          this.executeFlow("detalles_por_linea");
+          break;
+        case "resumen_consumos_total":
+          this.executeFlow("resumen_consumos_total");
+          break;
+        case "gestionar_lineas":
+          this.executeFlow("gestionar_lineas");
+          break;
+        case "cambio_plan_linea_1":
+          this.executeFlow("cambio_plan_linea_1");
+          break;
+        case "cambio_plan_linea_2":
+          this.executeFlow("cambio_plan_linea_2");
+          break;
+        case "cambio_plan_linea_3":
+          this.executeFlow("cambio_plan_linea_3");
+          break;
+        case "planes_disponibles":
+          this.executeFlow("planes_disponibles");
+          break;
+        case "consumo_por_app":
+          this.executeFlow("consumo_por_app");
+          break;
+        case "historial_mensual_consumo":
+          this.executeFlow("historial_mensual_consumo");
+          break;
+        case "configurar_alertas_datos":
+          this.executeFlow("configurar_alertas_datos");
+          break;
+        case "proyeccion_consumo":
+          this.executeFlow("proyeccion_consumo");
+          break;
+        case "comprar_1gb":
+          this.executeFlow("comprar_1gb");
+          break;
+        case "comprar_3gb":
+          this.executeFlow("comprar_3gb");
+          break;
+        case "comprar_5gb":
+          this.executeFlow("comprar_5gb");
+          break;
+        case "comprar_10gb":
+          this.executeFlow("comprar_10gb");
+          break;
+        case "terminos_compra_gigas":
+          this.executeFlow("terminos_compra_gigas");
+          break;
+        case "activar_roaming":
+          this.executeFlow("activar_roaming");
+          break;
+        case "packs_roaming":
+          this.executeFlow("packs_roaming");
+          break;
+        case "tarifas_roaming":
+          this.executeFlow("tarifas_roaming");
+          break;
+        case "historial_roaming":
+          this.executeFlow("historial_roaming");
+          break;
+        case "info_roaming":
+          this.executeFlow("info_roaming");
+          break;
+        case "ingresar_numero_destino_plan":
+          this.executeFlow("ingresar_numero_destino_plan");
+          break;
+        case "ver_saldo_disponible_plan":
+          this.executeFlow("ver_saldo_disponible_plan");
+          break;
+        case "activar_guardado_automatico_plan":
+          this.executeFlow("activar_guardado_automatico_plan");
+          break;
+        case "historial_gb_guardados_plan":
+          this.executeFlow("historial_gb_guardados_plan");
+          break;
+        case "desactivar_guardado_plan":
+          this.executeFlow("desactivar_guardado_plan");
+          break;
+        case "confirmar_upgrade_premium":
+          this.executeFlow("confirmar_upgrade_premium");
+          break;
+        case "confirmar_upgrade_elite":
+          this.executeFlow("confirmar_upgrade_elite");
+          break;
+        case "confirmar_downgrade_smart":
+          this.executeFlow("confirmar_downgrade_smart");
+          break;
+        case "confirmar_downgrade_basico":
+          this.executeFlow("confirmar_downgrade_basico");
+          break;
+        case "comparativa_planes":
+          this.executeFlow("comparativa_planes");
+          break;
+        case "comprar_pack_america_datos":
+          this.executeFlow("comprar_pack_america_datos");
+          break;
+        case "comprar_pack_america_completo":
+          this.executeFlow("comprar_pack_america_completo");
+          break;
+        case "comprar_pack_europa_datos":
+          this.executeFlow("comprar_pack_europa_datos");
+          break;
+        case "mas_destinos_roaming":
+          this.executeFlow("mas_destinos_roaming");
+          break;
+        case "confirmar_compra_1gb":
+          this.executeFlow("confirmar_compra_1gb");
+          break;
+        case "cambiar_metodo_pago":
+          this.executeFlow("cambiar_metodo_pago");
+          break;
+        case "ver_saldo_actualizado":
+          this.executeFlow("ver_saldo_actualizado");
+          break;
+        case "roaming_usa":
+          this.executeFlow("roaming_usa");
+          break;
+        case "roaming_espana":
+          this.executeFlow("roaming_espana");
+          break;
+        case "roaming_brasil":
+          this.executeFlow("roaming_brasil");
+          break;
+        case "roaming_chile":
+          this.executeFlow("roaming_chile");
+          break;
+        case "roaming_mexico":
+          this.executeFlow("roaming_mexico");
+          break;
+        case "roaming_otro_pais":
+          this.executeFlow("roaming_otro_pais");
+          break;
+        case "packs_roaming_usa":
+          this.executeFlow("packs_roaming_usa");
+          break;
+        case "config_celular_roaming":
+          this.executeFlow("config_celular_roaming");
+          break;
+        case "consejos_roaming":
+          this.executeFlow("consejos_roaming");
+          break;
+        case "desglose_facturacion":
+          this.executeFlow("desglose_facturacion");
+          break;
+        case "comparar_planes":
+          this.executeFlow("comparar_planes");
+          break;
+        case "tendencia_semanal":
+          this.executeFlow("tendencia_semanal");
+          break;
+        case "limites_por_app":
+          this.executeFlow("limites_por_app");
+          break;
+        case "consejos_ahorro_datos":
+          this.executeFlow("consejos_ahorro_datos");
+          break;
+
+        // Celulares y Chips - NUEVO CDU
+        case "menu_celulares_chips_titular":
+          this.executeFlow("menu_celulares_chips_titular");
+          break;
+        case "menu_celulares_chips_usuario":
+          this.executeFlow("menu_celulares_chips_usuario");
+          break;
+        case "menu_celulares_chips_top_emp":
+          this.executeFlow("menu_celulares_chips_top_emp");
+          break;
+        case "post_seleccion_opciones":
+          this.executeFlow("post_seleccion_opciones");
+          break;
+        case "consulta_chips":
+          this.executeFlow("consulta_chips");
+          break;
+        case "compra_celular":
+          this.executeFlow("compra_celular");
+          break;
+        case "seguimiento_envio":
+          this.executeFlow("seguimiento_envio");
+          break;
+        case "cancelar_compra":
+          this.executeFlow("cancelar_compra");
+          break;
+        case "otro_tema":
+          this.executeFlow("otro_tema");
+          break;
+        case "activar_chip_nuevo":
+          this.executeFlow("activar_chip_nuevo");
+          break;
+        case "configurar_esim":
+          this.executeFlow("configurar_esim");
+          break;
+        case "catalogo_celulares":
+          this.executeFlow("catalogo_celulares");
+          break;
+        case "ingresar_numero_pedido":
+          this.executeFlow("ingresar_numero_pedido");
+          break;
+        case "procesar_numero_pedido":
+          this.executeFlow("procesar_numero_pedido");
+          break;
+        case "detectar_tipo_usuario":
+          this.executeFlow("detectar_tipo_usuario");
+          break;
+        case "chip_no_activa":
+          this.executeFlow("chip_no_activa");
+          break;
+        case "instrucciones_activacion":
+          this.executeFlow("instrucciones_activacion");
+          break;
+        case "proceso_exitoso":
+          this.executeFlow("proceso_exitoso");
+          break;
+
+        // Facturas y pagos - subflujos existentes
         case "facturas_pagos":
           this.executeFlow("facturas_pagos");
           break;
@@ -699,28 +1227,19 @@ class WhatsAppBot {
   }
 }
 
-// Initialize the bot when page loads
-document.addEventListener("DOMContentLoaded", () => {
-  const bot = new WhatsAppBot();
-
-  // Make bot globally accessible for custom integrations
-  window.whatsappBot = bot;
-
-  // No auto-start - los mensajes iniciales ya están en el HTML
-  // El flujo se activará cuando el usuario escriba "Hola!"
-});
+// La inicialización se hará desde index.html después de cargar todos los CDUs
 
 // Custom functions for MIRO integration
 window.addMiroFlow = function (flowName, flowData) {
-  if (window.whatsappBot) {
-    window.whatsappBot.addCustomFlow(flowName, flowData);
+  if (window.bot) {
+    window.bot.addCustomFlow(flowName, flowData);
     console.log(`Flow "${flowName}" added successfully`);
   }
 };
 
 window.simulateScenario = function (scenario) {
-  if (window.whatsappBot) {
-    window.whatsappBot.simulateScenario(scenario);
+  if (window.bot) {
+    window.bot.simulateScenario(scenario);
   }
 };
 

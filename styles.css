@@ -12,6 +12,80 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
+    margin: 0;
+}
+
+/* Contenedor principal - Layout horizontal centrado */
+.app-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Información del Emulador - Sidebar */
+.emulator-info-sidebar {
+    flex: 0 0 320px;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    position: sticky;
+    top: 20px;
+}
+
+.emulator-info-sidebar .emulator-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+}
+
+.emulator-info-sidebar .emulator-badge i {
+    font-size: 16px;
+    color: #fff;
+}
+
+.emulator-info-sidebar .emulator-description {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+.emulator-info-sidebar .emulator-description p {
+    margin-bottom: 12px;
+}
+
+.emulator-info-sidebar .emulator-description p:last-child {
+    margin-bottom: 0;
+}
+
+.emulator-info-sidebar .emulator-description strong {
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Responsive: En pantallas pequeñas, volver al layout vertical */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .emulator-info-sidebar {
+        flex: none;
+        position: static;
+    }
 }
 
 .phone-container {
@@ -398,4 +472,235 @@ body {
         transform: translateY(-10px);
         opacity: 1;
     }
+}
+
+/* ========================================
+   CDU SELECTOR - MODO DESARROLLO
+   ======================================== */
+
+.cdu-selector {
+    background: #f0f2f5;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    z-index: 1000;
+}
+
+.cdu-selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #128c7e;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cdu-toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.cdu-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.cdu-toggle-btn.collapsed i {
+    transform: rotate(-90deg);
+}
+
+.cdu-selector-content {
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Estilo personalizado para el scrollbar */
+.cdu-selector-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.cdu-selector-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.cdu-selector-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.cdu-selector-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.cdu-selector-content.collapsed {
+    max-height: 0;
+    padding: 0 15px;
+}
+
+.cdu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-right: 5px; /* Espacio para el scrollbar */
+}
+
+.cdu-btn {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-align: center;
+}
+
+.cdu-btn:hover:not(:disabled) {
+    border-color: #128c7e;
+    background: #f8fffe;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(18, 140, 126, 0.15);
+}
+
+.cdu-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.cdu-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f5f5f5;
+}
+
+.cdu-btn i {
+    font-size: 24px;
+    color: #128c7e;
+}
+
+.cdu-btn:disabled i {
+    color: #999;
+}
+
+.cdu-btn span {
+    font-weight: 600;
+    color: #333;
+    font-size: 13px;
+}
+
+.cdu-btn small {
+    color: #666;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.cdu-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.clear-chat-btn,
+.reset-bot-btn {
+    flex: 1;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.reset-bot-btn {
+    background: #4ecdc4;
+}
+
+.clear-chat-btn:hover {
+    background: #ff5252;
+    transform: translateY(-1px);
+}
+
+.reset-bot-btn:hover {
+    background: #45b7aa;
+    transform: translateY(-1px);
+}
+
+.clear-chat-btn:active,
+.reset-bot-btn:active {
+    transform: translateY(0);
+}
+
+/* Indicador de CDU activo */
+.cdu-btn.active {
+    border-color: #128c7e;
+    background: linear-gradient(135deg, #128c7e, #25d366);
+    color: white;
+}
+
+.cdu-btn.active i,
+.cdu-btn.active span,
+.cdu-btn.active small {
+    color: white;
+}
+
+/* Responsive para el selector */
+@media (max-width: 400px) {
+    .cdu-grid {
+        grid-template-columns: 1fr;
+        padding-right: 3px; /* Menos espacio en móvil */
+    }
+    
+    .cdu-selector-content {
+        max-height: 350px; /* Menos altura en móvil */
+        padding: 12px;
+    }
+    
+    .cdu-selector-content::-webkit-scrollbar {
+        width: 4px; /* Scrollbar más delgado en móvil */
+    }
+    
+    .cdu-actions {
+        flex-direction: column;
+    }
+}
+
+/* Animación de entrada */
+@keyframes cduFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cdu-selector-content {
+    animation: cduFadeIn 0.3s ease;
 }

@@ -11,67 +11,260 @@
     />
   </head>
   <body>
-    <div class="phone-container">
-      <!-- Status Bar -->
-      <div class="status-bar">
-        <span class="time">10:32</span>
-        <div class="status-icons">
-          <i class="fas fa-signal"></i>
-          <i class="fas fa-wifi"></i>
-          <i class="fas fa-battery-full"></i>
+    <div class="app-container">
+      <div class="phone-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span class="time">10:32</span>
+          <div class="status-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+          </div>
         </div>
-      </div>
 
-      <!-- Header -->
-      <div class="chat-header">
-        <div class="header-left">
-          <i class="fas fa-arrow-left back-arrow"></i>
-          <div class="contact-info">
-            <div class="avatar">
-              <img src="movistar-logo.png" alt="Movistar" class="avatar-logo" />
+        <!-- Header -->
+        <div class="chat-header">
+          <div class="header-left">
+            <i class="fas fa-arrow-left back-arrow"></i>
+            <div class="contact-info">
+              <div class="avatar">
+                <img
+                  src="movistar-logo.png"
+                  alt="Movistar"
+                  class="avatar-logo"
+                />
+              </div>
+              <div class="contact-details">
+                <h3 class="contact-name">Movistar Empresas Ar</h3>
+                <span class="contact-status">en línea</span>
+              </div>
             </div>
-            <div class="contact-details">
-              <h3 class="contact-name">Movistar Empresas Ar</h3>
-              <span class="contact-status">en línea</span>
+          </div>
+          <div class="header-right">
+            <i class="fas fa-phone"></i>
+            <i class="fas fa-check-circle verified-icon"></i>
+            <i class="fas fa-ellipsis-v"></i>
+          </div>
+        </div>
+
+        <!-- CDU Selector -->
+        <div class="cdu-selector" id="cduSelector">
+          <div class="cdu-selector-header">
+            <span>Selector de CDUs</span>
+            <button class="cdu-toggle-btn collapsed" id="cduToggleBtn">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          <div class="cdu-selector-content collapsed" id="cduSelectorContent">
+            <div class="cdu-grid">
+              <button class="cdu-btn" data-cdu="welcome">
+                <i class="fas fa-home"></i>
+                <span>CDU Bienvenida</span>
+                <small>Flujo principal de inicio</small>
+              </button>
+              <button class="cdu-btn" data-cdu="facturacion_cuit">
+                <i class="fas fa-file-invoice"></i>
+                <span>CDU Facturación</span>
+                <small>Factura con botonera</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_servicios">
+                <i class="fas fa-shopping-cart"></i>
+                <span>CDU Contratar</span>
+                <small>Servicios empresariales</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_celulares_chips_usuario">
+                <i class="fas fa-mobile-alt"></i>
+                <span>CDU Celulares</span>
+                <small>Chips, equipos y compras</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_beneficios">
+                <i class="fas fa-gift"></i>
+                <span>CDU Beneficios</span>
+                <small>Club, cursos, ofertas</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_plan_botonera">
+                <i class="fas fa-chart-line"></i>
+                <span>CDU Plan x Botonera</span>
+                <small>Planes, consumos, roaming</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_factura_esta_linea">
+                <i class="fas fa-file-invoice"></i>
+                <span>CDU Factura de esta línea</span>
+                <small>Facturas, pagos, deudas</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_cambio_sim">
+                <i class="fas fa-sim-card"></i>
+                <span>CDU Cambio de SIM/eSIM</span>
+                <small>Chips físicos y eSIM virtual</small>
+              </button>
+              <button class="cdu-btn" data-cdu="menu_pedir_chip">
+                <i class="fas fa-microchip"></i>
+                <span>CDU Pedir Chip</span>
+                <small>Solicitar nuevos chips</small>
+              </button>
+              <button class="cdu-btn" data-cdu="soporte_tecnico" disabled>
+                <i class="fas fa-tools"></i>
+                <span>CDU Soporte</span>
+                <small>Próximamente...</small>
+              </button>
+              <button class="cdu-btn" data-cdu="consultas_reclamos" disabled>
+                <i class="fas fa-question-circle"></i>
+                <span>CDU Consultas</span>
+                <small>Próximamente...</small>
+              </button>
+              <button class="cdu-btn" data-cdu="ayuda_tecnica" disabled>
+                <i class="fas fa-wrench"></i>
+                <span>CDU Ayuda Técnica</span>
+                <small>Próximamente...</small>
+              </button>
+            </div>
+            <div class="cdu-actions">
+              <button class="clear-chat-btn" id="clearChatBtn">
+                <i class="fas fa-trash"></i>
+                Limpiar Chat
+              </button>
+              <button class="reset-bot-btn" id="resetBotBtn">
+                <i class="fas fa-refresh"></i>
+                Reset Bot
+              </button>
             </div>
           </div>
         </div>
-        <div class="header-right">
-          <i class="fas fa-phone"></i>
-          <i class="fas fa-check-circle verified-icon"></i>
-          <i class="fas fa-ellipsis-v"></i>
+
+        <!-- Chat Messages -->
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages">
+            <!-- Chat vacío - será reactivo a los mensajes del cliente -->
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="message-input-container">
+          <div class="input-area">
+            <i class="fas fa-paperclip attachment-icon"></i>
+            <input
+              type="text"
+              class="message-input"
+              placeholder="Escribe un mensaje"
+              id="messageInput"
+            />
+            <i class="fas fa-camera camera-icon"></i>
+            <button class="voice-btn" id="voiceBtn">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button class="send-btn" id="sendBtn" style="display: none">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Chat Messages -->
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages">
-          <!-- Chat vacío - será reactivo a los mensajes del cliente -->
-        </div>
-      </div>
+      <script src="script.js"></script>
+      <script src="flujos/cdu-bienvenida.js"></script>
+      <script src="flujos/cdu-factura-botonera.js"></script>
+      <script src="flujos/cdu-contratar-servicios.js"></script>
+      <script src="flujos/cdu-celulares-chips.js"></script>
+      <script src="flujos/cdu-beneficios.js"></script>
+      <script src="flujos/cdu-plan-botonera.js"></script>
+      <script src="flujos/cdu-factura-esta-linea.js"></script>
+      <script src="flujos/cdu-cambio-sim.js"></script>
+      <script src="flujos/cdu-pedir-chip.js"></script>
+      <script>
+        // Cargar CDUs después de que se carguen todos los scripts
+        document.addEventListener("DOMContentLoaded", () => {
+          const bot = new WhatsAppBot();
+          bot.loadCDUs(); // Cargar todos los CDUs disponibles
+          window.bot = bot;
 
-      <!-- Message Input -->
-      <div class="message-input-container">
-        <div class="input-area">
-          <i class="fas fa-paperclip attachment-icon"></i>
-          <input
-            type="text"
-            class="message-input"
-            placeholder="Escribe un mensaje"
-            id="messageInput"
-          />
-          <i class="fas fa-camera camera-icon"></i>
-          <button class="voice-btn" id="voiceBtn">
-            <i class="fas fa-microphone"></i>
-          </button>
-          <button class="send-btn" id="sendBtn" style="display: none">
-            <i class="fas fa-paper-plane"></i>
-          </button>
+          // Inicializar selector de CDUs
+          initCDUSelector();
+        });
+
+        // Funcionalidad del selector de CDUs
+        function initCDUSelector() {
+          const toggleBtn = document.getElementById("cduToggleBtn");
+          const selectorContent = document.getElementById("cduSelectorContent");
+          const cduButtons = document.querySelectorAll(
+            ".cdu-btn:not(:disabled)"
+          );
+          const clearChatBtn = document.getElementById("clearChatBtn");
+          const resetBotBtn = document.getElementById("resetBotBtn");
+
+          // Toggle del selector
+          toggleBtn.addEventListener("click", () => {
+            const isCollapsed = selectorContent.classList.contains("collapsed");
+            if (isCollapsed) {
+              selectorContent.classList.remove("collapsed");
+              toggleBtn.classList.remove("collapsed");
+            } else {
+              selectorContent.classList.add("collapsed");
+              toggleBtn.classList.add("collapsed");
+            }
+          });
+
+          // Botones de CDU
+          cduButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const cduName = btn.getAttribute("data-cdu");
+
+              // Remover clase active de todos los botones
+              cduButtons.forEach((b) => b.classList.remove("active"));
+
+              // Agregar clase active al botón clickeado
+              btn.classList.add("active");
+
+              // Limpiar chat y ejecutar CDU
+              clearChat();
+              setTimeout(() => {
+                window.bot.executeFlow(cduName);
+              }, 500);
+            });
+          });
+
+          // Limpiar chat
+          clearChatBtn.addEventListener("click", clearChat);
+
+          // Reset bot
+          resetBotBtn.addEventListener("click", () => {
+            clearChat();
+            // Remover active de todos los CDUs
+            cduButtons.forEach((b) => b.classList.remove("active"));
+            // Recargar CDUs
+            window.bot.loadCDUs();
+          });
+        }
+
+        function clearChat() {
+          const chatMessages = document.getElementById("chatMessages");
+          chatMessages.innerHTML = "";
+        }
+      </script>
+
+      <!-- Información del Emulador - Al costado de la UI -->
+      <div class="emulator-info-sidebar">
+        <div class="emulator-badge">
+          <i class="fas fa-robot"></i>
+          <strong>EMULADOR BOT WHATSAPP B2B</strong>
+        </div>
+        <div class="emulator-description">
+          <p>
+            Esta herramienta
+            <strong>emula el BOT de atención WhatsApp</strong> para clientes
+            <strong>B2B únicamente</strong>.
+          </p>
+          <p>
+            <strong>Función orientativa:</strong> Las opciones internas (como
+            clasificación de usuarios) no se muestran al cliente real, sino que
+            sirven para que el asesor seleccione el perfil del usuario final.
+          </p>
+          <p>
+            <strong>Uso:</strong> Herramienta de entrenamiento y guía para
+            asesores en la atención de clientes B2B.
+          </p>
         </div>
       </div>
     </div>
-
-    <script src="script.js"></script>
-    <script src="flujo-bienvenida-nuevo.js"></script>
+    <!-- Cierre de app-container -->
   </body>
 </html>

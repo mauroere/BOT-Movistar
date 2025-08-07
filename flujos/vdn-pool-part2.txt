@@ -1,0 +1,41 @@
+﻿
+  // Derivar a asesor comercial
+  factura_derivar_asesor_comercial: {
+    messages: [
+      " **Conectando con Asesor Comercial**\n\n Te estoy derivando con un asesor especializado en facturación empresarial.\n\n Tiempo estimado de espera: 3-5 minutos\n\n También podés llamar directamente al:\n **611** desde tu Movistar\n **0800-555-611** desde cualquier teléfono"
+    ],
+    options: [
+      { text: "Esperar en línea", action: "factura_esperar_asesor" },
+      { text: "Callback en 10 min", action: "factura_callback_10min" },
+      { text: "Menú principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback programado - dentro de horario
+  factura_callback_programado: {
+    messages: [
+      " **Callback Programado**\n\n¿Cuándo querés que te llamemos?\n\n **Horarios disponibles hoy:**\n En 15 minutos\n En 30 minutos\n En 1 hora\n En 2 horas"
+    ],
+    options: [
+      { text: "En 15 minutos", action: "factura_callback_confirmado" },
+      { text: "En 30 minutos", action: "factura_callback_confirmado" },
+      { text: "En 1 hora", action: "factura_callback_confirmado" },
+      { text: "En 2 horas", action: "factura_callback_confirmado" },
+      { text: "Volver", action: "factura_dentro_horario_comercial" },
+    ],
+  },
+
+  // Callback para mañana - fuera de horario
+  factura_callback_manana: {
+    messages: [
+      " **Callback para Mañana**\n\n **Horarios disponibles mañana:**\n 9:00 AM\n 11:00 AM\n 2:00 PM\n 4:00 PM\n 6:00 PM"
+    ],
+    options: [
+      { text: "9:00 AM", action: "factura_callback_confirmado" },
+      { text: "11:00 AM", action: "factura_callback_confirmado" },
+      { text: "2:00 PM", action: "factura_callback_confirmado" },
+      { text: "4:00 PM", action: "factura_callback_confirmado" },
+      { text: "6:00 PM", action: "factura_callback_confirmado" },
+      { text: "Volver", action: "factura_fuera_horario_comercial" },
+    ],
+  },

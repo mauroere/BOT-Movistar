@@ -1,0 +1,154 @@
+﻿  //=== FLUJOS VDN POOL NO Y HORARIO COMERCIAL ===//
+
+  // VDN Pool NO - Flujo de validaciÃ³n y derivaciÃ³n
+  factura_vdn_pool_no: {
+    messages: [
+      "ðŸ” **ValidaciÃ³n VDN Pool**\n\nEl sistema estÃ¡ verificando el estado del VDN Pool..."
+    ],
+    options: [
+      { text: "Dentro de horario comercial", action: "factura_dentro_horario_comercial" },
+      { text: "Fuera de horario comercial", action: "factura_fuera_horario_comercial" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Dentro de horario comercial - NO
+  factura_dentro_horario_comercial: {
+    messages: [
+      "ðŸ• **Horario Comercial Activo**\n\nEstÃ¡s dentro del horario comercial pero el VDN Pool no estÃ¡ disponible.\n\nÂ¿CÃ³mo querÃ©s continuar?"
+    ],
+    options: [
+      { text: "Hablar con asesor", action: "factura_derivar_asesor_comercial" },
+      { text: "Usar Mi Movistar", action: "factura_usar_mi_movistar" },
+      { text: "Callback programado", action: "factura_callback_programado" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Fuera de horario comercial
+  factura_fuera_horario_comercial: {
+    messages: [
+      "ðŸŒ™ **Fuera de Horario Comercial**\n\nðŸ“… **Horarios de atenciÃ³n:**\nâ€¢ Lunes a Viernes: 8:00 a 20:00\nâ€¢ SÃ¡bados: 9:00 a 17:00\nâ€¢ Domingos: Cerrado\n\nÂ¿QuÃ© querÃ©s hacer?"
+    ],
+    options: [
+      { text: "Callback para maÃ±ana", action: "factura_callback_manana" },
+      { text: "Usar Mi Movistar", action: "factura_usar_mi_movistar" },
+      { text: "Dejar mensaje", action: "factura_dejar_mensaje" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Derivar a asesor comercial
+  factura_derivar_asesor_comercial: {
+    messages: [
+      "ðŸ‘¨â€ðŸ’¼ **Conectando con Asesor Comercial**\n\nðŸ”„ Te estoy derivando con un asesor especializado en facturaciÃ³n empresarial.\n\nâ±ï¸ Tiempo estimado de espera: 3-5 minutos\n\nðŸ“ž TambiÃ©n podÃ©s llamar directamente al:\nâ€¢ **611** desde tu Movistar\nâ€¢ **0800-555-611** desde cualquier telÃ©fono"
+    ],
+    options: [
+      { text: "Esperar en lÃ­nea", action: "factura_esperar_asesor" },
+      { text: "Callback en 10 min", action: "factura_callback_10min" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback programado
+  factura_callback_programado: {
+    messages: [
+      "ðŸ“ž **Callback Programado**\n\nÂ¿CuÃ¡ndo querÃ©s que te llamemos?\n\nðŸ“… **Horarios disponibles hoy:**\nâ€¢ En 15 minutos\nâ€¢ En 30 minutos\nâ€¢ En 1 hora\nâ€¢ En 2 horas"
+    ],
+    options: [
+      { text: "En 15 minutos", action: "factura_callback_confirmado" },
+      { text: "En 30 minutos", action: "factura_callback_confirmado" },
+      { text: "En 1 hora", action: "factura_callback_confirmado" },
+      { text: "En 2 horas", action: "factura_callback_confirmado" },
+      { text: "Volver", action: "factura_dentro_horario_comercial" },
+    ],
+  },
+
+  // Callback para maÃ±ana
+  factura_callback_manana: {
+    messages: [
+      "ðŸ“ž **Callback para MaÃ±ana**\n\nðŸ“… **Horarios disponibles maÃ±ana:**\nâ€¢ 9:00 AM\nâ€¢ 11:00 AM\nâ€¢ 2:00 PM\nâ€¢ 4:00 PM\nâ€¢ 6:00 PM"
+    ],
+    options: [
+      { text: "9:00 AM", action: "factura_callback_confirmado" },
+      { text: "11:00 AM", action: "factura_callback_confirmado" },
+      { text: "2:00 PM", action: "factura_callback_confirmado" },
+      { text: "4:00 PM", action: "factura_callback_confirmado" },
+      { text: "6:00 PM", action: "factura_callback_confirmado" },
+      { text: "Volver", action: "factura_fuera_horario_comercial" },
+    ],
+  },
+
+  // Dejar mensaje
+  factura_dejar_mensaje: {
+    messages: [
+      "ðŸ“ **Dejar Mensaje**\n\nÂ¿QuÃ© tipo de consulta querÃ©s dejar registrada?\n\nðŸ“‹ **Opciones disponibles:**\nâ€¢ Consulta de facturaciÃ³n\nâ€¢ Problema con pagos\nâ€¢ Reclamo tÃ©cnico\nâ€¢ Consulta general"
+    ],
+    options: [
+      { text: "Consulta de facturaciÃ³n", action: "factura_mensaje_registrado" },
+      { text: "Problema con pagos", action: "factura_mensaje_registrado" },
+      { text: "Reclamo tÃ©cnico", action: "factura_mensaje_registrado" },
+      { text: "Consulta general", action: "factura_mensaje_registrado" },
+      { text: "Volver", action: "factura_fuera_horario_comercial" },
+    ],
+  },
+
+  // Esperar asesor
+  factura_esperar_asesor: {
+    messages: [
+      "â³ **En Cola de Espera**\n\nðŸ”„ Te estamos conectando con el prÃ³ximo asesor disponible.\n\nðŸ“Š **Tu posiciÃ³n en cola:** 3\nâ±ï¸ **Tiempo estimado:** 2-4 minutos\n\nðŸ’¡ **Mientras esperÃ¡s, podÃ©s:**"
+    ],
+    options: [
+      { text: "Usar Mi Movistar", action: "factura_usar_mi_movistar" },
+      { text: "Ver Ãºltimas facturas", action: "factura_opciones_completas" },
+      { text: "Cambiar a callback", action: "factura_callback_10min" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback en 10 minutos
+  factura_callback_10min: {
+    messages: [
+      "ðŸ“ž **Callback Confirmado**\n\nâœ… **Te vamos a llamar en 10 minutos**\n\nðŸ“± **Al nÃºmero:** [nÃºmero de lÃ­nea actual]\nðŸ‘¨â€ðŸ’¼ **Asesor:** Especialista en facturaciÃ³n empresarial\nðŸ“‹ **Tema:** Consulta de facturaciÃ³n\n\nÂ¿EstÃ¡ todo correcto?"
+    ],
+    options: [
+      { text: "Confirmar callback", action: "factura_callback_confirmado" },
+      { text: "Cambiar horario", action: "factura_callback_programado" },
+      { text: "Cancelar callback", action: "factura_derivar_asesor_comercial" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback confirmado
+  factura_callback_confirmado: {
+    messages: [
+      "âœ… **Callback Confirmado**\n\nðŸ“ž **Te vamos a llamar en el horario acordado**\n\nðŸ“± Asegurate de tener tu telÃ©fono disponible\nðŸ‘¨â€ðŸ’¼ Un asesor especializado se va a comunicar con vos\nðŸ“‹ Vas a recibir un SMS de confirmaciÃ³n\n\nðŸ”” **Recordatorio:** Te llegarÃ¡ una notificaciÃ³n 5 minutos antes"
+    ],
+    options: [
+      { text: "Entendido", action: "factura_callback_final" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Mensaje registrado
+  factura_mensaje_registrado: {
+    messages: [
+      "ðŸ“ **Mensaje Registrado**\n\nâœ… **Tu consulta fue registrada exitosamente**\n\nðŸ“‹ **NÃºmero de caso:** #FAC-2025-0001\nðŸ“… **Fecha:** 5 de agosto de 2025\nâ±ï¸ **Respuesta estimada:** 24-48 horas\n\nðŸ“§ **Vas a recibir actualizaciones por:**\nâ€¢ SMS al nÃºmero de esta lÃ­nea\nâ€¢ Email (si estÃ¡ configurado)"
+    ],
+    options: [
+      { text: "Entendido", action: "factura_mensaje_final" },
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+
+  // Callback final 
+  factura_callback_final: {
+    messages: [
+      "ðŸŽ¯ **Todo Listo**\n\nÂ¡Que tengas buen dÃ­a! Un asesor se va a comunicar con vos en el horario acordado.\n\nðŸ’¡ **Tip:** MantenÃ© cerca los datos de tu cuenta para agilizar la consulta."
+    ],
+    options: [
+      { text: "MenÃº principal", action: "menu_principal" },
+    ],
+  },
+};
+
