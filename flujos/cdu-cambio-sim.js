@@ -26,7 +26,7 @@ const cduCambioSim = {
       "Puedo ayudarte a *pedir tu nuevo chip físico o eSIM virtual manteniendo tu número*. 👌\n\n👆 La eSIM es un chip virtual que se activa escaneando un código QR. \n\nEstá disponible solo para algunos celus. Si tenés dudas, buscá los modelos compatibles acá: http://mov.is/qJ2VB.\n\nSi necesitás dar de alta un número nuevo, elegí _Pedir línea nueva_ ¿Cómo seguimos? 😊",
     ],
     options: [
-      { text: "Pedir un Chip", action: "pedir_chip_solo_chip" },
+      { text: "Pedir un Chip", action: "menu_pedir_chip" },
       { text: "Pedir una eSIM", action: "pedir_esim_pendiente" },
       { text: "Pedir línea nueva", action: "pedir_linea_nueva_asesor" },
       { text: "⬅️ Volver", action: "menu_cambio_sim" },
@@ -112,66 +112,6 @@ const cduCambioSim = {
     ],
   },
 
-  //=== FLUJO PEDIR CHIP INTEGRADO ===//
-
-  pedir_chip_solo_chip: {
-    messages: [
-      "Perfecto, vamos a hacer el trámite. Decime ¿necesitás solo el chip o también un equipo? 📱\n\nTené en cuenta estos *Métodos de Envío*:\n*AMBA*: Envío a casa, Colonia, y *Resto del país*: Solo retira desde Movistar, deberás ir presencialmente.\n\n¿Estás en AMBA? 👆",
-    ],
-    options: [
-      { text: "Sí, AMBA", action: "pedir_chip_amba" },
-      { text: "No, interior", action: "pedir_chip_interior" },
-      { text: "Volver", action: "cambio_sim_pye_titulares_autorizados" },
-    ],
-  },
-
-  pedir_chip_amba: {
-    messages: [
-      "¡Todo en orden! 👌\n\nSegún mis registros, tengo este *domicilio de facturación*:\n((domicilio de facturación))\n\n¿Querés que enviemos el chip a esa dirección?",
-    ],
-    options: [
-      { text: "Sí, agregar", action: "pedir_chip_transferir" },
-      { text: "No, otra dirección", action: "pedir_chip_otra_direccion" },
-    ],
-  },
-
-  pedir_chip_otra_direccion: {
-    messages: [
-      "¿De qué necesitás *agregar algún comentario* para ayudarnos a encontrar el domicilio? 👀 WhatsApp primero de una localidad una una de la línea en tu celular, en una casa al fondo del patio, en un kiosco.",
-    ],
-    options: [
-      { text: "Sí, una dirección", action: "pedir_chip_nueva_direccion" },
-      { text: "No, continuar", action: "pedir_chip_transferir" },
-    ],
-  },
-
-  pedir_chip_nueva_direccion: {
-    messages: [
-      "Por favor, escribime el *nombre y apellido* de la persona autorizada para retirar el chip. Vas a tener que suscripción o persona *nombre y apellido de la empresa autorizada*",
-    ],
-    options: [
-      { text: "Empezar de nuevo", action: "cambio_sim_pye_titulares_autorizados" },
-      { text: "Hablar afuera del CDU", action: "pedir_chip_transferir" },
-    ],
-  },
-
-  pedir_chip_interior: {
-    messages: [
-      "Ningún problema.\n\nVoy a transferirte con tu *representante comercial* para terminar este trámite 📞",
-    ],
-    options: [
-      { text: "Hablar afuera del CDU", action: "pedir_chip_transferir" },
-    ],
-  },
-
-  pedir_chip_transferir: {
-    messages: [
-      "Voy a transferirte con tu *representante comercial* para terminar este trámite 📞",
-    ],
-    options: [
-      { text: "Finalizar", action: "menu_principal" },
-    ],
-  },
 };
 
 // Registrar el CDU en el sistema global

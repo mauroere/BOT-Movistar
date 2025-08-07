@@ -1,23 +1,7 @@
 // CDU Pedir un Chip
-// Mensajes exactos del diagrama original  pedir_chip_interior: {
-    messages: [
-      "En esta web podés buscar la Tienda Movistar más cercana a tu domicilio: http://mov.is/r4owm.\n\nTené en cuenta que solo la persona titular o apoderada de la empresa podrá retirar el chip presentando el DNI.\n\n¿Te ayudo con algo más? 😊",
-    ],
-    options: [
-      { text: "No, gracias", action: "pedir_chip_no_gracias" },
-      { text: "Volver", action: "menu_pedir_chip" },
-      { text: "Menu principal", action: "menu_principal" },
-    ],
-  },
+// Mensajes exactos del diagrama original
 
-  pedir_chip_no_gracias: {
-    messages: [
-      "¡Me alegra haberte ayudado! 😊\n\nSi necesitás algo más, no dudes en escribirme. ¡Hasta pronto! 👋",
-    ],
-    options: [
-      { text: "Menu principal", action: "menu_principal" },
-    ],
-  }, cduPedirChip = {
+const cduPedirChip = {
   //=== PUNTO DE ENTRADA ===//
 
   menu_pedir_chip: {
@@ -35,7 +19,7 @@
 
   pedir_chip_solo_chip: {
     messages: [
-      "Perfecto, vamos a hacer el trámite desde acá para que recibas el chip en tu domicilio. �\n\nTené en cuenta estos tiempos de envío: AMBA: hasta 4 días hábiles \nResto del país: hasta 10 días hábiles. \nSi lo necesitás con urgencia, podés pedirlo en alguna de nuestras sucursales.\n\n¿Empezamos?",
+      "Perfecto, vamos a hacer el trámite desde acá para que recibas el chip en tu domicilio. 😁\n\nTené en cuenta estos tiempos de envío: AMBA: hasta 4 días hábiles \nResto del país: hasta 10 días hábiles. \nSi lo necesitás con urgencia, podés pedirlo en alguna de nuestras sucursales.\n\n¿Empezamos?",
     ],
     options: [
       { text: "Sí, continuar", action: "pedir_chip_amba" },
@@ -48,11 +32,59 @@
 
   pedir_chip_amba: {
     messages: [
-      "¡Todo en orden! 👌\n\nSegún mis registros, tengo este *domicilio de facturación*:\n((domicilio de facturación))\n\n¿Querés que enviemos el chip a esa dirección?",
+      "Empezamos! 😄\n\n¿Necesitás pedir un chip nuevo para esta línea u otra de tu CUIT?",
     ],
     options: [
-      { text: "Sí, agregar", action: "pedir_chip_transferir" },
-      { text: "No, otra dirección", action: "pedir_chip_otra_direccion" },
+      { text: "Esta línea", action: "pedir_chip_esta_linea" },
+      { text: "Otra línea del CUIT", action: "pedir_chip_transferir" },
+      { text: "3 líneas o más", action: "pedir_chip_tres_lineas" },
+    ],
+  },
+
+  pedir_chip_esta_linea: {
+    messages: [
+      "¡Todo en orden! 👌\n\nSegún mis registros, tengo este domicilio de facturación:\n{{domicilio de facturación}}\n\n¿Querés que enviemos el chip a esa dirección?",
+    ],
+    options: [
+      { text: "Sí, a esta dirección", action: "pedir_chip_confirmar_direccion" },
+      { text: "No, a otra dirección", action: "pedir_chip_otra_direccion" },
+    ],
+  },
+
+  pedir_chip_confirmar_direccion: {
+    messages: [
+      "¡Ok! ¿Necesitás agregar algún comentario para ayudarnos a encontrar el domicilio? 🤔 \nPor ejemplo: es un local en una galería, es una casa al fondo del pasillo, es un kiosco.",
+    ],
+    options: [
+      { text: "Sí, agregar", action: "pedir_chip_agregar_comentario" },
+      { text: "No, continuar", action: "pedir_chip_persona_autorizada" },
+    ],
+  },
+
+  pedir_chip_agregar_comentario: {
+    messages: [
+      "Dale, escribime el comentario acá: 👇",
+    ],
+    options: [
+      { text: "Continuar", action: "pedir_chip_persona_autorizada" },
+    ],
+  },
+
+  pedir_chip_persona_autorizada: {
+    messages: [
+      "Por favor, escribime el nombre y apellido de la persona autorizada para recibir el chip.\n👆 Tiene que ser mayor de 18 años.",
+    ],
+    options: [
+      { text: "Continuar", action: "pedir_chip_transferir" },
+    ],
+  },
+
+  pedir_chip_tres_lineas: {
+    messages: [
+      "En ese caso, voy a transferirte con tu representante comercial para agilizar el trámite. 👌",
+    ],
+    options: [
+      { text: "Finalizar", action: "menu_principal" },
     ],
   },
 
@@ -62,7 +94,7 @@
     ],
     options: [
       { text: "Sí, una dirección", action: "pedir_chip_nueva_direccion" },
-      { text: "No, continuar", action: "pedir_chip_transferir" },
+      { text: "No, continuar", action: "pedir_chip_persona_autorizada" },
     ],
   },
 
@@ -72,18 +104,29 @@
     ],
     options: [
       { text: "Empezar de nuevo", action: "menu_pedir_chip" },
-      { text: "Hablar afuera del CDU", action: "pedir_chip_transferir" },
+      { text: "Hablar afuera del CDU", action: "pedir_chip_persona_autorizada" },
     ],
   },
 
-  //=== FLUJO INTERIOR ===//
+  //=== FLUJO INTERIOR (PEDIR EN SUCURSAL) ===//
 
   pedir_chip_interior: {
     messages: [
-      "En esta web podés buscar la Tienda Movistar más cercana a tu domicilio: http://mov.is/r4owm.\n\nTené en cuenta que solo la persona titular o apoderada de la empresa podrá retirar el chip presentando el DNI.\n\n¿Te ayudo con algo más? �",
+      "En esta web podés buscar la Tienda Movistar más cercana a tu domicilio: http://mov.is/r4owm.\n\nTené en cuenta que solo la persona titular o apoderada de la empresa podrá retirar el chip presentando el DNI.\n\n¿Te ayudo con algo más? 😊",
     ],
     options: [
-      { text: "Hablar afuera del CDU", action: "pedir_chip_transferir" },
+      { text: "No, gracias", action: "pedir_chip_no_gracias" },
+      { text: "Volver", action: "menu_pedir_chip" },
+      { text: "Menu principal", action: "menu_principal" },
+    ],
+  },
+
+  pedir_chip_no_gracias: {
+    messages: [
+      "¡Me alegra haberte ayudado! 😊\n\nSi necesitás algo más, no dudes en escribirme. ¡Hasta pronto! 👋",
+    ],
+    options: [
+      { text: "Menu principal", action: "menu_principal" },
     ],
   },
 
@@ -91,10 +134,10 @@
 
   pedir_chip_chip_equipo: {
     messages: [
-      "Por favor, aguardame un momento y te transfiero con un representante Comercial . �",
+      "Por favor, aguardame un momento y te transfiero con un representante Comercial . 😉",
     ],
     options: [
-      { text: "Hablar afuera del CDU", action: "pedir_chip_transferir" },
+      { text: "ASESOR. Fin de Flujo", action: "pedir_chip_transferir" },
     ],
   },
 
