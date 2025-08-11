@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug CDU Selector</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modules/cdu-selector-styles.css">
+    <style>
+        body { padding: 20px; }
+        .debug-info { 
+            background: #f0f0f0; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .debug-section {
+            border: 2px solid #ccc;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug CDU Selector</h1>
+    
+    <div class="debug-section">
+        <h2>1. Selector Manual</h2>
+        <div id="manual-selector" class="cdu-selector">
+            <div class="cdu-selector-header">
+                <button id="manual-toggle" class="toggle-btn">
+                    <i class="fas fa-chevron-down"></i>
+                    CDU Selector
+                </button>
+            </div>
+            <div id="manual-content" class="cdu-selector-content collapsed">
+                <p>Este es el contenido del selector</p>
+                <button>Test Button 1</button>
+                <button>Test Button 2</button>
+            </div>
+        </div>
+        
+        <div class="debug-info" id="manual-debug"></div>
+        
+        <button onclick="testManualToggle()">Test Manual Toggle</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. Selector Generado por Script</h2>
+        <div id="generated-container">
+            <!-- Se generará por el script -->
+        </div>
+        
+        <div class="debug-info" id="generated-debug"></div>
+        
+        <button onclick="generateSelector()">Generar Selector</button>
+    </div>
+
+    <script>
+        function testManualToggle() {
+            const content = document.getElementById('manual-content');
+            const debug = document.getElementById('manual-debug');
+            
+            if (!content) {
+                debug.innerHTML = 'ERROR: No se encontró el elemento manual-content';
+                return;
+            }
+            
+            const wasCollapsed = content.classList.contains('collapsed');
+            
+            debug.innerHTML = `
+Estado antes: ${wasCollapsed ? 'colapsado' : 'expandido'}<br>
+Classes antes: ${content.className}<br>
+Max-height computado: ${getComputedStyle(content).maxHeight}<br>
+Opacity computado: ${getComputedStyle(content).opacity}
+            `;
+            
+            if (wasCollapsed) {
+                content.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+            }
+            
+            setTimeout(() => {
+                debug.innerHTML += `<br><br>Estado después: ${content.classList.contains('collapsed') ? 'colapsado' : 'expandido'}<br>
+Classes después: ${content.className}<br>
+Max-height computado: ${getComputedStyle(content).maxHeight}<br>
+Opacity computado: ${getComputedStyle(content).opacity}`;
+            }, 100);
+        }
+        
+        function generateSelector() {
+            const container = document.getElementById('generated-container');
+            const debug = document.getElementById('generated-debug');
+            
+            container.innerHTML = `
+                <div class="cdu-selector">
+                    <div class="cdu-selector-header">
+                        <button class="toggle-btn" onclick="toggleGenerated()">
+                            <i class="fas fa-chevron-down"></i>
+                            CDU Selector Generado
+                        </button>
+                    </div>
+                    <div id="generated-content" class="cdu-selector-content collapsed">
+                        <p>Contenido generado dinámicamente</p>
+                        <button>Generated Button 1</button>
+                        <button>Generated Button 2</button>
+                    </div>
+                </div>
+            `;
+            
+            debug.innerHTML = 'Selector generado correctamente';
+        }
+        
+        function toggleGenerated() {
+            const content = document.getElementById('generated-content');
+            const debug = document.getElementById('generated-debug');
+            
+            if (!content) {
+                debug.innerHTML = 'ERROR: No se encontró generated-content';
+                return;
+            }
+            
+            const wasCollapsed = content.classList.contains('collapsed');
+            debug.innerHTML = `Toggle ejecutado. Estado antes: ${wasCollapsed ? 'colapsado' : 'expandido'}`;
+            
+            if (wasCollapsed) {
+                content.classList.remove('collapsed');
+            } else {
+                content.classList.add('collapsed');
+            }
+            
+            setTimeout(() => {
+                debug.innerHTML += `<br>Estado después: ${content.classList.contains('collapsed') ? 'colapsado' : 'expandido'}`;
+            }, 100);
+        }
+        
+        // Auto-inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug page loaded');
+            
+            // Test automático del selector manual
+            const manualToggle = document.getElementById('manual-toggle');
+            if (manualToggle) {
+                manualToggle.addEventListener('click', testManualToggle);
+                console.log('Manual toggle listener added');
+            }
+        });
+    </script>
+</body>
+</html>

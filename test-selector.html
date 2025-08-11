@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Selector CDU</title>
+    <style>
+        .test-selector {
+            border: 2px solid #25d366;
+            border-radius: 8px;
+            margin: 20px;
+            background: white;
+        }
+        
+        .test-header {
+            background: #128c7e;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-content {
+            max-height: 500px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        
+        .test-content.collapsed {
+            max-height: 0 !important;
+            opacity: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>Test del Selector CDU</h1>
+    
+    <div class="test-selector" id="testSelector">
+        <div class="test-header" id="testHeader">
+            <span>Test Selector (Click para expandir/colapsar)</span>
+            <span class="toggle-icon" id="toggleIcon">▼</span>
+        </div>
+        <div class="test-content collapsed" id="testContent">
+            <h3>Contenido del selector</h3>
+            <p>Este es el contenido que debería mostrarse/ocultarse</p>
+            <button>Botón 1</button>
+            <button>Botón 2</button>
+            <button>Botón 3</button>
+        </div>
+    </div>
+    
+    <div style="margin: 20px;">
+        <button onclick="manualToggle()">Toggle Manual</button>
+        <button onclick="debugInfo()">Debug Info</button>
+    </div>
+    
+    <script>
+        let isCollapsed = true;
+        
+        document.getElementById('testHeader').addEventListener('click', function() {
+            console.log('Header clicked!');
+            toggleContent();
+        });
+        
+        function toggleContent() {
+            const content = document.getElementById('testContent');
+            const icon = document.getElementById('toggleIcon');
+            
+            console.log('Toggle ejecutado, estado actual:', isCollapsed);
+            
+            if (isCollapsed) {
+                content.classList.remove('collapsed');
+                icon.textContent = '▲';
+                icon.classList.add('rotated');
+                console.log('Expandiendo...');
+            } else {
+                content.classList.add('collapsed');
+                icon.textContent = '▼';
+                icon.classList.remove('rotated');
+                console.log('Colapsando...');
+            }
+            
+            isCollapsed = !isCollapsed;
+        }
+        
+        function manualToggle() {
+            toggleContent();
+        }
+        
+        function debugInfo() {
+            const content = document.getElementById('testContent');
+            const computedStyle = window.getComputedStyle(content);
+            
+            console.log('Debug Info:', {
+                classes: content.className,
+                maxHeight: computedStyle.maxHeight,
+                opacity: computedStyle.opacity,
+                display: computedStyle.display,
+                isCollapsed: isCollapsed
+            });
+        }
+    </script>
+</body>
+</html>

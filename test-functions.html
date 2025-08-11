@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Funciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Funciones Implementadas</h1>
+    
+    <div class="test-section">
+        <h3>🔧 Estado de la aplicación principal</h3>
+        <div id="app-status">Verificando...</div>
+        <button class="test-button" onclick="checkAppStatus()">🔄 Verificar Estado</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>🎯 Test de Funciones</h3>
+        <button class="test-button" onclick="testClearChat()">🧹 Test Clear Chat</button>
+        <button class="test-button" onclick="testResetSession()">🔄 Test Reset Session</button>
+        <button class="test-button" onclick="testScrollBottom()">⬇️ Test Scroll Bottom</button>
+        <button class="test-button" onclick="testKeyboardHelp()">⌨️ Test Keyboard Help</button>
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>⭐ Test Sección de Favoritos</h3>
+        <div id="favorites-status">Verificando configuración...</div>
+        <button class="test-button" onclick="checkFavoritesSection()">🔄 Verificar Favoritos</button>
+    </div>
+
+    <script>
+        function log(message, isError = false) {
+            const results = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = isError ? 'status error' : 'status success';
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+
+        function checkAppStatus() {
+            const statusDiv = document.getElementById('app-status');
+            
+            try {
+                // Verificar si el bot existe en la ventana principal
+                if (window.opener && window.opener.bot) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Bot detectado en ventana principal<br>' +
+                                        `📊 Stats Manager: ${window.opener.bot.statsManager ? 'OK' : 'NO'}<br>` +
+                                        `🎛️ CDU Selector: ${window.opener.bot.cduSelector ? 'OK' : 'NO'}`;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ No se puede acceder al bot principal. Abre esta página desde la aplicación principal.';
+                }
+            } catch (e) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ Error: ${e.message}`;
+            }
+        }
+
+        function testClearChat() {
+            try {
+                if (window.opener && window.opener.bot) {
+                    window.opener.bot.clearChat();
+                    log('✅ clearChat() ejecutado correctamente');
+                } else {
+                    log('❌ No se puede acceder al bot', true);
+                }
+            } catch (e) {
+                log(`❌ Error en clearChat(): ${e.message}`, true);
+            }
+        }
+
+        function testResetSession() {
+            try {
+                if (window.opener && window.opener.bot) {
+                    // Simular confirmación
+                    const originalConfirm = window.opener.confirm;
+                    window.opener.confirm = () => true;
+                    
+                    window.opener.bot.resetSession();
+                    
+                    // Restaurar confirm original
+                    window.opener.confirm = originalConfirm;
+                    
+                    log('✅ resetSession() ejecutado correctamente');
+                } else {
+                    log('❌ No se puede acceder al bot', true);
+                }
+            } catch (e) {
+                log(`❌ Error en resetSession(): ${e.message}`, true);
+            }
+        }
+
+        function testScrollBottom() {
+            try {
+                if (window.opener && window.opener.bot) {
+                    window.opener.bot.scrollToBottom();
+                    log('✅ scrollToBottom() ejecutado correctamente');
+                } else {
+                    log('❌ No se puede acceder al bot', true);
+                }
+            } catch (e) {
+                log(`❌ Error en scrollToBottom(): ${e.message}`, true);
+            }
+        }
+
+        function testKeyboardHelp() {
+            try {
+                if (window.opener && window.opener.bot) {
+                    window.opener.bot.showKeyboardHelp();
+                    log('✅ showKeyboardHelp() ejecutado correctamente');
+                } else {
+                    log('❌ No se puede acceder al bot', true);
+                }
+            } catch (e) {
+                log(`❌ Error en showKeyboardHelp(): ${e.message}`, true);
+            }
+        }
+
+        function checkFavoritesSection() {
+            try {
+                if (window.opener && window.opener.bot && window.opener.bot.cduSelector) {
+                    const config = window.opener.bot.cduSelector.config;
+                    const statusDiv = document.getElementById('favorites-status');
+                    
+                    if (config && config.showFavoriteSection === false) {
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = '✅ Sección de favoritos DESHABILITADA correctamente';
+                    } else {
+                        statusDiv.className = 'status error';
+                        statusDiv.innerHTML = '❌ Sección de favoritos aún HABILITADA';
+                    }
+                } else {
+                    const statusDiv = document.getElementById('favorites-status');
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ No se puede acceder al CDU Selector';
+                }
+            } catch (e) {
+                const statusDiv = document.getElementById('favorites-status');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ Error: ${e.message}`;
+            }
+        }
+
+        // Auto-verificar al cargar
+        setTimeout(() => {
+            checkAppStatus();
+            checkFavoritesSection();
+        }, 1000);
+    </script>
+</body>
+</html>

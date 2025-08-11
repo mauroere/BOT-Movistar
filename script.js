@@ -14,6 +14,12 @@ class WhatsAppBot {
       currentStep: 0,
       selectedService: "",
     };
+
+    // Inicializar sistema de estadísticas CDU
+    this.initStatsSystem();
+
+    // Inicializar selector modular CDU
+    this.initSelectorSystem();
   }
 
   initEventListeners() {
@@ -35,6 +41,39 @@ class WhatsAppBot {
       }
     });
 
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e) => {
+      // Ctrl + L - Limpiar chat
+      if (e.ctrlKey && e.key === 'l') {
+        e.preventDefault();
+        this.clearChat();
+        this.addMessage("🧹 **[SISTEMA]** Chat limpiado", "received");
+        return;
+      }
+      
+      // Ctrl + R - Reset sesión
+      if (e.ctrlKey && e.key === 'r') {
+        e.preventDefault();
+        this.resetSession();
+        return;
+      }
+      
+      // Ctrl + S - Toggle selector CDU
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        if (window.debugCDUSelector) {
+          window.debugCDUSelector.basicToggle();
+        }
+        return;
+      }
+      
+      // Escape - Cerrar modals
+      if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.ranking-modal, .help-modal');
+        modals.forEach(modal => modal.remove());
+      }
+    });
+
     // Send button click
     this.sendBtn.addEventListener("click", () => {
       this.sendMessage();
@@ -45,7 +84,345 @@ class WhatsAppBot {
       if (e.target.closest(".action-btn")) {
         this.handleActionButton(e.target.closest(".action-btn"));
       }
+
+      // Activity panel toggle
+      if (e.target.closest(".activity-toggle-btn") || e.target.closest(".activity-header")) {
+        this.toggleStatsPanel();
+      }
+
+      // Activity actions
+      if (e.target.closest(".activity-btn") || e.target.closest(".stats-btn")) {
+        this.handleStatsAction(e.target.closest(".activity-btn") || e.target.closest(".stats-btn"));
+      }
+
+      // Handle specific buttons by ID
+      const clickedElement = e.target.closest("button");
+      if (clickedElement) {
+        switch(clickedElement.id) {
+          case 'resetSession':
+            this.resetSession();
+            break;
+          case 'showKeyboardHelp':
+            this.showKeyboardHelp();
+            break;
+          case 'clearChatBtn':
+            this.clearChat();
+            break;
+          case 'resetBotBtn':
+            this.resetSession();
+            break;
+        }
+      }
+
+      // Close ranking modal
+      if (e.target.closest(".close-ranking") || e.target.classList.contains("ranking-modal")) {
+        this.closeRankingModal();
+      }
     });
+  }
+
+  // Sistema de estadísticas CDU
+  initStatsSystem() {
+    if (typeof CDUStatsManager !== 'undefined') {
+      this.statsManager = new CDUStatsManager();
+      this.createStatsPanel();
+      this.updateStatsDisplay();
+      console.log("✅ Sistema de estadísticas CDU inicializado");
+    } else {
+      console.warn("⚠️ CDUStatsManager no disponible");
+    }
+  }
+
+  // Sistema de selector modular CDU
+  initSelectorSystem() {
+    console.log("🚀 Inicializando sistema selector...");
+    
+    if (typeof CDUSelectorManager !== 'undefined') {
+      console.log("✅ CDUSelectorManager encontrado");
+      
+      // Crear inmediatamente, sin timeout
+      this.selectorManager = new CDUSelectorManager(this, this.statsManager);
+      
+      // Conectar stats manager con selector si ambos están disponibles
+      if (this.statsManager && this.selectorManager) {
+        this.selectorManager.setStatsManager(this.statsManager);
+        console.log("🔗 Sistemas CDU integrados correctamente");
+      }
+      
+      console.log("✅ SelectorManager creado:", !!this.selectorManager);
+      
+    } else {
+      console.warn("⚠️ CDUSelectorManager no disponible");
+    }
+  }
+
+  createStatsPanel() {
+    // Crear panel unificado más compacto para la sidebar derecha
+    const sidebar = document.querySelector('.emulator-info-sidebar');
+    if (!sidebar) return;
+
+    const unifiedPanel = document.createElement('div');
+    unifiedPanel.className = 'unified-activity-panel';
+    unifiedPanel.innerHTML = `
+      <div class="activity-header">
+        <i class="fas fa-pulse status-indicator"></i>
+        <span>Actividad</span>
+        <button class="activity-toggle-btn">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+      <div class="activity-content collapsed">
+        <div class="activity-stats">
+          <div class="stat-row">
+            <span class="stat-label">CDUs:</span>
+            <span class="stat-value" id="total-usage">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Favoritos:</span>
+            <span class="stat-value" id="favorites-count">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Sesión:</span>
+            <span class="stat-value session-active" id="cdu-used-count">0</span>
+          </div>
+        </div>
+        <div class="activity-actions">
+          <button class="activity-btn" data-action="show-ranking" title="Ver ranking">
+            <i class="fas fa-trophy"></i>
+          </button>
+          <button class="activity-btn" data-action="export-stats" title="Exportar">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="activity-btn" id="showKeyboardHelp" title="Atajos">
+            <i class="fas fa-keyboard"></i>
+          </button>
+          <button class="activity-btn" id="resetSession" title="Reset">
+            <i class="fas fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Insertar al principio de la sidebar
+    sidebar.insertBefore(unifiedPanel, sidebar.firstChild);
+  }
+
+  toggleStatsPanel() {
+    const panel = document.querySelector('.activity-content');
+    const toggleBtn = document.querySelector('.activity-toggle-btn');
+    if (panel && toggleBtn) {
+      panel.classList.toggle('collapsed');
+      const icon = toggleBtn.querySelector('i');
+      icon.className = panel.classList.contains('collapsed') ? 
+        'fas fa-chevron-down' : 'fas fa-chevron-up';
+    }
+  }
+
+  updateStatsDisplay() {
+    if (!this.statsManager) return;
+
+    const stats = this.statsManager.getGeneralStats();
+    const favorites = this.statsManager.getFavorites();
+
+    // Actualizar valores en el panel unificado
+    const totalUsageEl = document.getElementById('total-usage');
+    const favoritesCountEl = document.getElementById('favorites-count');
+    const sessionCountEl = document.getElementById('cdu-used-count');
+    
+    if (totalUsageEl) totalUsageEl.textContent = stats.totalUsage;
+    if (favoritesCountEl) favoritesCountEl.textContent = favorites.length;
+    if (sessionCountEl) sessionCountEl.textContent = stats.todayUsage || 0;
+
+    // Actualizar indicadores en botones CDU
+    this.updateCDUButtonsWithStats();
+
+    // Notificar al selector para que se actualice
+    if (this.selectorManager) {
+      this.selectorManager.refreshStats();
+    }
+  }
+
+  updateCDUButtonsWithStats() {
+    if (!this.statsManager) return;
+
+    const ranking = this.statsManager.getRanking();
+    const favorites = this.statsManager.getFavorites();
+    
+    // Remover indicadores existentes
+    document.querySelectorAll('.favorite-indicator').forEach(el => el.remove());
+    document.querySelectorAll('.cdu-btn').forEach(btn => btn.classList.remove('favorite'));
+
+    // Agregar nuevos indicadores
+    favorites.forEach((fav, index) => {
+      const buttons = document.querySelectorAll(`[data-action="${fav.id}"]`);
+      buttons.forEach(button => {
+        button.classList.add('favorite');
+        
+        const indicator = document.createElement('div');
+        indicator.className = 'favorite-indicator';
+        indicator.innerHTML = `
+          <i class="fas fa-star"></i>
+          <span class="usage-count">${fav.count}</span>
+        `;
+        
+        button.style.position = 'relative';
+        button.appendChild(indicator);
+      });
+    });
+  }
+
+  handleStatsAction(button) {
+    const action = button.dataset.action;
+    
+    switch(action) {
+      case 'show-ranking':
+        this.showRankingModal();
+        break;
+      case 'export-stats':
+        this.exportStats();
+        break;
+      case 'reset-stats':
+        this.resetStats();
+        break;
+    }
+  }
+
+  showRankingModal() {
+    if (!this.statsManager) return;
+
+    const ranking = this.statsManager.getRanking();
+    
+    const modal = document.createElement('div');
+    modal.className = 'ranking-modal';
+    modal.innerHTML = `
+      <div class="ranking-content">
+        <div class="ranking-header">
+          <div class="ranking-title">
+            <i class="fas fa-trophy"></i>
+            Ranking de CDUs
+          </div>
+          <button class="close-ranking">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        ${ranking.map((item, index) => `
+          <div class="ranking-item">
+            <div class="ranking-position ${index < 3 ? 'top-3' : ''}">
+              #${index + 1}
+            </div>
+            <div class="ranking-info">
+              <div class="ranking-name">${item.name}</div>
+              <div class="ranking-usage">Último uso: ${item.lastUsed || 'Nunca'}</div>
+            </div>
+            <div class="ranking-count">${item.count} usos</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    setTimeout(() => modal.classList.add('show'), 10);
+  }
+
+  closeRankingModal() {
+    const modal = document.querySelector('.ranking-modal');
+    if (modal) {
+      modal.classList.remove('show');
+      setTimeout(() => modal.remove(), 300);
+    }
+  }
+
+  exportStats() {
+    if (!this.statsManager) return;
+
+    const stats = this.statsManager.exportStats();
+    const blob = new Blob([JSON.stringify(stats, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cdu-stats-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    this.addMessage("📊 **[SISTEMA]** Estadísticas exportadas correctamente", "received");
+  }
+
+  resetStats() {
+    if (!this.statsManager) return;
+
+    if (confirm('¿Estás seguro de que quieres resetear todas las estadísticas?')) {
+      this.statsManager.resetStats();
+      this.updateStatsDisplay();
+      this.addMessage("🔄 **[SISTEMA]** Estadísticas reseteadas", "received");
+    }
+  }
+
+  resetSession() {
+    if (confirm('¿Estás seguro de que quieres resetear la sesión? Se limpiarán todos los mensajes.')) {
+      // Limpiar mensajes del chat
+      this.clearChat();
+      
+      // Resetear estado del bot
+      this.currentFlow = null;
+      this.currentStep = null;
+      this.userContext = {};
+      
+      // Resetear input y estado
+      this.messageInput.value = '';
+      this.updateSendButton();
+      
+      // Mensaje de confirmación
+      setTimeout(() => {
+        this.addMessage("🔄 **[SISTEMA]** Sesión reseteada. ¡Hola! Soy el asistente virtual de Movistar Empresas.", "received");
+      }, 100);
+      
+      console.log("🔄 Sesión reseteada completamente");
+    }
+  }
+
+  clearChat() {
+    if (this.chatMessages) {
+      this.chatMessages.innerHTML = '';
+      console.log("🧹 Chat limpiado");
+    }
+  }
+
+  showKeyboardHelp() {
+    const helpModal = document.createElement('div');
+    helpModal.className = 'help-modal';
+    helpModal.innerHTML = `
+      <div class="help-content">
+        <div class="help-header">
+          <h3><i class="fas fa-keyboard"></i> Atajos de Teclado</h3>
+          <button class="close-help">×</button>
+        </div>
+        <div class="help-body">
+          <div class="shortcut-group">
+            <h4>Navegación</h4>
+            <div class="shortcut"><kbd>Enter</kbd> - Enviar mensaje</div>
+            <div class="shortcut"><kbd>Ctrl + L</kbd> - Limpiar chat</div>
+            <div class="shortcut"><kbd>Ctrl + R</kbd> - Reset sesión</div>
+          </div>
+          <div class="shortcut-group">
+            <h4>Selector CDU</h4>
+            <div class="shortcut"><kbd>Ctrl + S</kbd> - Toggle selector</div>
+            <div class="shortcut"><kbd>Ctrl + 1-9</kbd> - Selección rápida</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Agregar event listener para cerrar
+    helpModal.addEventListener('click', (e) => {
+      if (e.target.classList.contains('close-help') || e.target.classList.contains('help-modal')) {
+        document.body.removeChild(helpModal);
+      }
+    });
+
+    document.body.appendChild(helpModal);
   }
 
   initBotFlows() {
@@ -260,6 +637,13 @@ class WhatsAppBot {
     if (!flow) return;
 
     this.currentFlow = flowName;
+
+    // Registrar uso del CDU en estadísticas
+    if (this.statsManager) {
+      this.statsManager.recordUsage(flowName);
+      // Actualizar display después de un breve delay
+      setTimeout(() => this.updateStatsDisplay(), 100);
+    }
 
     // Send flow messages with delay
     flow.messages.forEach((message, index) => {
@@ -1208,13 +1592,30 @@ class WhatsAppBot {
   }
 
   scrollToBottom() {
-    // Scroll to bottom with smooth behavior
-    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-    
-    // Also try with requestAnimationFrame for better performance
-    requestAnimationFrame(() => {
+    if (!this.chatMessages) return;
+
+    // Método más robusto para scroll
+    const scrollToEnd = () => {
       this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    };
+    
+    // Scroll inmediato
+    scrollToEnd();
+    
+    // Scroll con requestAnimationFrame para mejor rendimiento
+    requestAnimationFrame(() => {
+      scrollToEnd();
+      
+      // Un scroll adicional después de un frame más para asegurar
+      requestAnimationFrame(() => {
+        scrollToEnd();
+      });
     });
+    
+    // Scroll adicional con timeout para casos donde el contenido sigue cargando
+    setTimeout(() => {
+      scrollToEnd();
+    }, 50);
   }
 
   // Method to add custom flows from MIRO boards

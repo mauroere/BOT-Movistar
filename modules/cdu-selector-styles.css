@@ -1,0 +1,526 @@
+/* Estilos para el CDU Selector Modular */
+
+/* === HEADER MEJORADO === */
+.cdu-selector {
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 1px solid #e1e5e9;
+}
+
+.cdu-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #128c7e;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cdu-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cdu-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cdu-count {
+  font-size: 10px;
+  opacity: 0.9;
+  color: #d9fdd3;
+}
+
+.cdu-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cdu-sort-btn,
+.cdu-stats-toggle,
+.cdu-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
+}
+
+.cdu-sort-btn:hover,
+.cdu-stats-toggle:hover,
+.cdu-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* === CONTENIDO MEJORADO === */
+.cdu-selector-content {
+  max-height: 2000px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  padding: 12px;
+}
+
+.cdu-selector-content.collapsed {
+  max-height: 0 !important;
+  opacity: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* === CONTROLES DE ORDENAMIENTO === */
+.cdu-sorting-controls {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e1e5e9;
+  background: #f0f2f5;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.cdu-sorting-controls.collapsed {
+  max-height: 0;
+  padding: 0 12px;
+  opacity: 0;
+}
+
+.sorting-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sort-option {
+  background: white;
+  border: 1px solid #e1e5e9;
+  color: #667781;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 500;
+}
+
+.sort-option:hover {
+  border-color: #25d366;
+  color: #25d366;
+}
+
+.sort-option.active {
+  background: #25d366;
+  border-color: #25d366;
+  color: white;
+  box-shadow: 0 1px 2px rgba(37, 211, 102, 0.2);
+}
+
+.sort-option i {
+  font-size: 9px;
+}
+
+/* === SECCIÓN DE FAVORITOS === */
+.cdu-favorites-section {
+  padding: 8px 12px;
+  background: #dcf8c6;
+  border-bottom: 1px solid #e1e5e9;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.cdu-favorites-section.collapsed {
+  max-height: 0;
+  padding: 0 12px;
+  opacity: 0;
+}
+
+.favorites-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #128c7e;
+}
+
+.favorites-header i {
+  color: #25d366;
+  font-size: 9px;
+}
+
+.favorites-count {
+  background: #25d366;
+  color: white;
+  padding: 1px 4px;
+  border-radius: 8px;
+  font-size: 9px;
+  min-width: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 4px;
+}
+
+/* === BÚSQUEDA === */
+.cdu-search-container {
+  padding: 8px 12px;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.cdu-search-container.collapsed {
+  max-height: 0;
+  padding: 0 12px;
+  opacity: 0;
+}
+
+.cdu-search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cdu-search-input-container i {
+  position: absolute;
+  left: 10px;
+  color: #667781;
+  font-size: 11px;
+  z-index: 2;
+}
+
+.cdu-search-input {
+  width: 100%;
+  padding: 6px 10px 6px 28px;
+  border: 1px solid #e1e5e9;
+  border-radius: 18px;
+  font-size: 11px;
+  transition: all 0.2s ease;
+  background: #f0f2f5;
+  outline: none;
+}
+
+.cdu-search-input:focus {
+  border-color: #25d366;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+}
+
+.cdu-clear-search {
+  position: absolute;
+  right: 6px;
+  background: #667781;
+  border: none;
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 7px;
+  transition: all 0.2s ease;
+}
+
+.cdu-clear-search:hover {
+  background: #54656f;
+}
+
+/* === GRID MEJORADO === */
+.enhanced-cdu-grid {
+  padding: 12px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: white;
+}
+
+.cdu-btn {
+  position: relative;
+  background: white;
+  border: 1px solid #e1e5e9;
+  color: #303030;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+
+.cdu-btn:hover {
+  border-color: #25d366;
+  background: #f0fdf4;
+}
+
+.cdu-btn.active {
+  background: #25d366;
+  border-color: #25d366;
+  color: white;
+  box-shadow: 0 1px 2px rgba(37, 211, 102, 0.3);
+}
+
+.cdu-btn.favorite {
+  background: #dcf8c6;
+  border-color: #25d366;
+  color: #128c7e;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(37, 211, 102, 0.2);
+}
+
+.cdu-btn.favorite:hover {
+  background: #c8e6c9;
+}
+
+.cdu-btn.compact {
+  padding: 4px 6px;
+  font-size: 9px;
+  margin-bottom: 3px;
+}
+
+/* === CONTENIDO DE BOTONES === */
+.cdu-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cdu-favorite-icon {
+  color: #25d366;
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+.cdu-btn.favorite .cdu-favorite-icon {
+  color: #128c7e;
+}
+
+.cdu-btn-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cdu-usage-badge {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+  padding: 1px 4px;
+  border-radius: 8px;
+  font-size: 8px;
+  font-weight: 500;
+  min-width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.cdu-btn.favorite .cdu-usage-badge {
+  background: rgba(18, 140, 126, 0.2);
+  color: #128c7e;
+}
+
+.cdu-btn.active .cdu-usage-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* === INDICADOR DE FAVORITO === */
+.favorite-indicator {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #25d366;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 6px;
+  font-size: 8px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+  z-index: 10;
+  animation: favoriteGlow 2s ease-in-out infinite;
+}
+
+.favorite-indicator i {
+  font-size: 6px;
+  color: #ffd700;
+}
+
+.favorite-indicator .usage-count {
+  font-size: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1px 3px;
+  border-radius: 4px;
+  min-width: 10px;
+  text-align: center;
+}
+
+@keyframes favoriteGlow {
+  0%, 100% { 
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 2px 16px rgba(37, 211, 102, 0.6); 
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .cdu-selector-header {
+    padding: 10px 12px;
+  }
+  
+  .cdu-title {
+    font-size: 13px;
+  }
+  
+  .cdu-count {
+    font-size: 10px;
+  }
+  
+  .cdu-sort-btn,
+  .cdu-stats-toggle,
+  .cdu-toggle-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+  
+  .sorting-options {
+    gap: 6px;
+  }
+  
+  .sort-option {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .favorites-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .enhanced-cdu-grid {
+    padding: 12px;
+    max-height: 250px;
+  }
+  
+  .cdu-btn {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  
+  .cdu-btn.compact {
+    padding: 4px 6px;
+    font-size: 9px;
+  }
+}
+
+/* === SCROLLBAR PERSONALIZADO === */
+.enhanced-cdu-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.enhanced-cdu-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.enhanced-cdu-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+}
+
+.enhanced-cdu-grid::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* === ESTADOS DE CARGA === */
+.cdu-selector.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cdu-selector.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* === ANIMACIONES DE ENTRADA === */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cdu-selector-content:not(.collapsed) {
+  animation: slideDown 0.3s ease;
+}
+
+.cdu-sorting-controls:not(.collapsed),
+.cdu-favorites-section:not(.collapsed),
+.cdu-search-container:not(.collapsed) {
+  animation: slideDown 0.3s ease;
+}
+
+/* === INTEGRACIÓN CON STATS === */
+.cdu-selector.stats-integrated .cdu-stats-toggle {
+  background: rgba(255, 215, 0, 0.3);
+  color: #ffd700;
+}
+
+.cdu-selector.stats-active .cdu-header-right {
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 20px;
+  padding: 4px;
+}

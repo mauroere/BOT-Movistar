@@ -969,4 +969,7 @@ const cduFacturaEstaLinea = {
   },
 };
 
-module.exports = cduFacturaEstaLinea;
+// En lugar de module.exports (Node.js), asignar al objeto global
+if (typeof window !== 'undefined') {
+  window.cduFacturaEstaLinea = cduFacturaEstaLinea;
+}

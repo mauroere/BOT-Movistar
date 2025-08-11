@@ -1,0 +1,412 @@
+/* Estilos para el Integrador del Emulador */
+
+/* === PANEL DE INTEGRACIÓN === */
+.emulator-integration-panel {
+  background: white;
+  border-radius: 8px;
+  margin-top: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #667781;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.integration-header {
+  background: #128c7e;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.integration-header i {
+  color: #fff;
+  font-size: 12px;
+}
+
+.integration-content {
+  padding: 12px;
+}
+
+/* === STATUS DE SISTEMAS === */
+.integration-status {
+  margin-bottom: 12px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.status-item:last-child {
+  border-bottom: none;
+}
+
+.status-label {
+  font-size: 10px;
+  opacity: 0.8;
+  color: #667781;
+}
+
+.status-value {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: #dcf8c6;
+  color: #128c7e;
+}
+
+/* === MÉTRICAS === */
+.integration-metrics {
+  background: #f0f2f5;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.metric-label {
+  font-size: 10px;
+  color: #667781;
+}
+
+.metric-value {
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  background: #25d366;
+  padding: 2px 6px;
+  border-radius: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* === ACCIONES === */
+.integration-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.integration-btn {
+  background: white;
+  border: 1px solid #25d366;
+  color: #25d366;
+  padding: 6px;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 10px;
+}
+
+.integration-btn:hover {
+  background: #25d366;
+  border-color: #25d366;
+  color: white;
+  transform: scale(1.1);
+}
+
+.integration-btn i {
+  font-size: 10px;
+}
+
+/* === MODAL DE AYUDA DE TECLADO === */
+.keyboard-help-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.keyboard-help-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.keyboard-help-header {
+  background: #128c7e;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 12px 12px 0 0;
+}
+
+.keyboard-help-header h3 {
+  margin: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-help {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-help:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.keyboard-shortcuts {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.shortcut-group h4 {
+  color: #128c7e;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #dcf8c6;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.shortcut-item:last-child {
+  border-bottom: none;
+}
+
+.shortcut-key {
+  background: #f0f2f5;
+  border: 1px solid #25d366;
+  color: #128c7e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 60px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(37, 211, 102, 0.2);
+}
+
+.shortcut-desc {
+  color: #667781;
+  font-size: 12px;
+  flex: 1;
+  margin-left: 12px;
+}
+
+/* === ANIMACIONES === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .emulator-integration-panel {
+    margin-top: 12px;
+  }
+  
+  .integration-content {
+    padding: 10px;
+  }
+  
+  .integration-header {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+  
+  .status-item,
+  .metric-item {
+    padding: 2px 0;
+  }
+  
+  .status-label,
+  .status-value,
+  .metric-label {
+    font-size: 9px;
+  }
+  
+  .metric-value {
+    font-size: 10px;
+  }
+  
+  .integration-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 8px;
+  }
+  
+  .keyboard-help-content {
+    margin: 10px;
+    max-height: 80vh;
+  }
+  
+  .keyboard-help-header {
+    padding: 12px 16px;
+  }
+  
+  .keyboard-help-header h3 {
+    font-size: 14px;
+  }
+  
+  .keyboard-shortcuts {
+    padding: 16px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .shortcut-key {
+    min-width: 50px;
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .shortcut-desc {
+    font-size: 11px;
+    margin-left: 8px;
+  }
+}
+
+/* === ESTADOS DE CONEXIÓN === */
+.status-value:contains("🟢") {
+  color: #25d366;
+}
+
+.status-value:contains("🔴") {
+  color: #dc3545;
+}
+
+.status-value:contains("⏳") {
+  color: #ffc107;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* === MEJORAS VISUALES === */
+.emulator-info-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #25d366 transparent;
+}
+
+.emulator-info-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.emulator-info-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.emulator-info-sidebar::-webkit-scrollbar-thumb {
+  background: #25d366;
+  border-radius: 3px;
+}
+
+.emulator-info-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #128c7e;
+}
+
+/* === EFECTOS HOVER === */
+.emulator-integration-panel:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+/* === BADGE DE VERSIÓN === */
+.emulator-badge::after {
+  content: "v2.0 MODULAR";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #128c7e;
+  color: white;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.emulator-badge {
+  position: relative;
+}
+
+/* === INDICADORES DE ACTIVIDAD === */
+.integration-content::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #25d366;
+  border-radius: 50%;
+  animation: activityBlink 3s ease-in-out infinite;
+}
+
+@keyframes activityBlink {
+  0%, 80% { opacity: 1; }
+  90% { opacity: 0.3; }
+  100% { opacity: 1; }
+}

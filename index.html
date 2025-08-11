@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhatsApp UI - Movistar Empresas</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="modules/cdu-stats-styles.css" />
+    <link rel="stylesheet" href="modules/cdu-selector-styles.css" />
+    <link rel="stylesheet" href="modules/emulator-integration-styles.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
@@ -160,7 +163,12 @@
         </div>
       </div>
 
+      <!-- Scripts - Orden correcto: primero módulos, después main -->
+      <script src="modules/cdu-stats-manager.js"></script>
+      <script src="modules/cdu-selector.js"></script>
+      <script src="modules/emulator-integration.js"></script>
       <script src="script.js"></script>
+      <script src="simple-debug.js"></script>
       <script src="flujos/cdu-bienvenida.js"></script>
       <script src="flujos/cdu-factura-botonera.js"></script>
       <script src="flujos/cdu-contratar-servicios.js"></script>
@@ -177,68 +185,8 @@
           bot.loadCDUs(); // Cargar todos los CDUs disponibles
           window.bot = bot;
 
-          // Inicializar selector de CDUs
-          initCDUSelector();
+          console.log("✅ Bot inicializado con sistema modular");
         });
-
-        // Funcionalidad del selector de CDUs
-        function initCDUSelector() {
-          const toggleBtn = document.getElementById("cduToggleBtn");
-          const selectorContent = document.getElementById("cduSelectorContent");
-          const cduButtons = document.querySelectorAll(
-            ".cdu-btn:not(:disabled)"
-          );
-          const clearChatBtn = document.getElementById("clearChatBtn");
-          const resetBotBtn = document.getElementById("resetBotBtn");
-
-          // Toggle del selector
-          toggleBtn.addEventListener("click", () => {
-            const isCollapsed = selectorContent.classList.contains("collapsed");
-            if (isCollapsed) {
-              selectorContent.classList.remove("collapsed");
-              toggleBtn.classList.remove("collapsed");
-            } else {
-              selectorContent.classList.add("collapsed");
-              toggleBtn.classList.add("collapsed");
-            }
-          });
-
-          // Botones de CDU
-          cduButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-              const cduName = btn.getAttribute("data-cdu");
-
-              // Remover clase active de todos los botones
-              cduButtons.forEach((b) => b.classList.remove("active"));
-
-              // Agregar clase active al botón clickeado
-              btn.classList.add("active");
-
-              // Limpiar chat y ejecutar CDU
-              clearChat();
-              setTimeout(() => {
-                window.bot.executeFlow(cduName);
-              }, 500);
-            });
-          });
-
-          // Limpiar chat
-          clearChatBtn.addEventListener("click", clearChat);
-
-          // Reset bot
-          resetBotBtn.addEventListener("click", () => {
-            clearChat();
-            // Remover active de todos los CDUs
-            cduButtons.forEach((b) => b.classList.remove("active"));
-            // Recargar CDUs
-            window.bot.loadCDUs();
-          });
-        }
-
-        function clearChat() {
-          const chatMessages = document.getElementById("chatMessages");
-          chatMessages.innerHTML = "";
-        }
       </script>
 
       <!-- Información del Emulador - Al costado de la UI -->
