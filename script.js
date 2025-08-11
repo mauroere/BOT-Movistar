@@ -163,10 +163,18 @@ class WhatsAppBot {
     this.chatMessages.appendChild(messageDiv);
     this.scrollToBottom();
 
-    // Remove animation class after animation completes
+    // Remove animation class after animation completes and scroll again
     setTimeout(() => {
       messageDiv.classList.remove("new");
+      this.scrollToBottom();
     }, 300);
+
+    // Additional scroll for buttons if they exist
+    if (options && type === "received") {
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 100);
+    }
   }
 
   addTypingIndicator() {
@@ -262,6 +270,8 @@ class WhatsAppBot {
         } else {
           this.addMessage(message, "received");
         }
+        // Ensure scroll to bottom after each message
+        setTimeout(() => this.scrollToBottom(), 100);
       }, (index + 1) * 800);
     });
   }
@@ -1198,7 +1208,13 @@ class WhatsAppBot {
   }
 
   scrollToBottom() {
+    // Scroll to bottom with smooth behavior
     this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    
+    // Also try with requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+      this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    });
   }
 
   // Method to add custom flows from MIRO boards
