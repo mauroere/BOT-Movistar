@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug - Editor Visual Drag & Drop</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .debug-container {
+        display: flex;
+        gap: 20px;
+        height: 600px;
+      }
+      .components-debug {
+        width: 200px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background: #f9f9f9;
+      }
+      .canvas-debug {
+        flex: 1;
+        border: 1px solid #ccc;
+        position: relative;
+        background: #fff;
+      }
+      .component-item-debug {
+        padding: 10px;
+        margin: 5px 0;
+        background: white;
+        border: 1px solid #ddd;
+        cursor: grab;
+        border-radius: 4px;
+      }
+      .component-item-debug:hover {
+        border-color: #007bff;
+      }
+      .component-item-debug.dragging {
+        opacity: 0.5;
+      }
+      .canvas-debug.drag-over {
+        background: #e3f2fd;
+      }
+      .test-node {
+        position: absolute;
+        width: 100px;
+        height: 50px;
+        background: #4caf50;
+        border: 2px solid #45a049;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        cursor: move;
+      }
+      .log {
+        height: 150px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        margin-top: 10px;
+        background: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🐛 Debug - Editor Visual Drag & Drop</h1>
+
+    <div class="debug-container">
+      <div class="components-debug">
+        <h3>Componentes</h3>
+        <div
+          class="component-item-debug"
+          draggable="true"
+          data-type="send-message"
+        >
+          💬 Enviar Mensaje
+        </div>
+        <div
+          class="component-item-debug"
+          draggable="true"
+          data-type="send-image"
+        >
+          🖼️ Enviar Imagen
+        </div>
+        <div
+          class="component-item-debug"
+          draggable="true"
+          data-type="condition"
+        >
+          ❓ Condición
+        </div>
+      </div>
+
+      <div class="canvas-debug" id="debug-canvas">
+        <h3 style="margin: 10px">Canvas (arrastra aquí)</h3>
+      </div>
+    </div>
+
+    <div class="log" id="debug-log"></div>
+    <button onclick="clearLog()">Limpiar Log</button>
+
+    <script>
+      let nodeCounter = 0;
+
+      function log(message) {
+        const logEl = document.getElementById("debug-log");
+        const timestamp = new Date().toLocaleTimeString();
+        logEl.innerHTML += `[${timestamp}] ${message}<br>`;
+        logEl.scrollTop = logEl.scrollHeight;
+        console.log(message);
+      }
+
+      function clearLog() {
+        document.getElementById("debug-log").innerHTML = "";
+      }
+
+      // Debug drag & drop
+      document.addEventListener("dragstart", (e) => {
+        if (e.target.classList.contains("component-item-debug")) {
+          const nodeType = e.target.dataset.type;
+          log(`🚀 DRAGSTART: ${nodeType}`);
+          e.dataTransfer.setData("text/plain", nodeType);
+          e.dataTransfer.effectAllowed = "copy";
+          e.target.classList.add("dragging");
+        }
+      });
+
+      document.addEventListener("dragend", (e) => {
+        if (e.target.classList.contains("component-item-debug")) {
+          log("🏁 DRAGEND");
+          e.target.classList.remove("dragging");
+        }
+      });
+
+      const canvas = document.getElementById("debug-canvas");
+
+      canvas.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        canvas.classList.add("drag-over");
+      });
+
+      canvas.addEventListener("dragleave", (e) => {
+        if (e.target === canvas) {
+          canvas.classList.remove("drag-over");
+        }
+      });
+
+      canvas.addEventListener("drop", (e) => {
+        e.preventDefault();
+        canvas.classList.remove("drag-over");
+
+        const nodeType = e.dataTransfer.getData("text/plain");
+        log(`⬇️ DROP: ${nodeType} en posición (${e.offsetX}, ${e.offsetY})`);
+
+        // Crear nodo de prueba
+        const testNode = document.createElement("div");
+        testNode.className = "test-node";
+        testNode.style.left = e.offsetX + "px";
+        testNode.style.top = e.offsetY + "px";
+        testNode.textContent = nodeType;
+        testNode.id = "node-" + ++nodeCounter;
+
+        canvas.appendChild(testNode);
+        log(`✅ Nodo creado: ${testNode.id}`);
+      });
+
+      // Test inicial
+      log("🔧 Debug iniciado - Arrastra componentes al canvas");
+    </script>
+  </body>
+</html>

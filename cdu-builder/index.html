@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CDU Builder Pro - Generador de Flujos WhatsApp</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="visual-editor/visual-editor.css" />
+    <link rel="stylesheet" href="visual-editor/visual-editor.css" />
+  </head>
+  <body>
+    <div class="builder-header">
+      <h1>🔧 CDU Builder Pro</h1>
+      <p>
+        Generador, Previsualizador y Desplegador Automático de Flujos - WhatsApp
+        Bot Movistar Empresas
+      </p>
+    </div>
+
+    <!-- Navegación por pestañas -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="config">
+          ⚙️ Configuración
+        </button>
+        <button class="tab-btn" data-tab="visual">🎨 Editor Visual</button>
+        <button class="tab-btn" data-tab="preview">👁️ Previsualización</button>
+        <button class="tab-btn" data-tab="code">📄 Código</button>
+        <button class="tab-btn" data-tab="deploy">🚀 Despliegue</button>
+      </div>
+    </div>
+
+    <!-- TAB 1: Configuración -->
+    <div class="tab-content active" id="config-tab">
+      <div class="builder-container">
+        <!-- Configuración Básica -->
+        <div class="builder-section">
+          <h3 class="section-title">⚙️ Configuración Básica</h3>
+
+          <div class="form-group">
+            <label class="form-label">Nombre del CDU (sin espacios) *:</label>
+            <input
+              type="text"
+              id="cduName"
+              class="form-input"
+              placeholder="ej: soporte_tecnico"
+              required
+            />
+            <small style="color: #666"
+              >Solo letras, números y guiones bajos</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Título para mostrar *:</label>
+            <input
+              type="text"
+              id="cduTitle"
+              class="form-input"
+              placeholder="ej: CDU Soporte Técnico"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descripción breve *:</label>
+            <input
+              type="text"
+              id="cduDescription"
+              class="form-input"
+              placeholder="ej: Asistencia técnica especializada"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Icono (Font Awesome):</label>
+            <input
+              type="text"
+              id="cduIcon"
+              class="form-input"
+              placeholder="ej: fas fa-tools"
+              value="fas fa-cog"
+            />
+            <small style="color: #666"
+              >Busca íconos en
+              <a href="https://fontawesome.com/icons" target="_blank"
+                >FontAwesome</a
+              ></small
+            >
+          </div>
+        </div>
+
+        <!-- Mensajes y Opciones -->
+        <div class="builder-section">
+          <h3 class="section-title">💬 Contenido del Flujo</h3>
+
+          <div class="form-group">
+            <label class="form-label">Mensaje inicial *:</label>
+            <textarea
+              id="initialMessage"
+              class="form-input form-textarea"
+              placeholder="¡Hola! Te ayudo con..."
+              required
+            ></textarea>
+            <small style="color: #666"
+              >Este será el primer mensaje que vea el usuario</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mensaje adicional (opcional):</label>
+            <textarea
+              id="secondMessage"
+              class="form-input form-textarea"
+              placeholder="Selecciona una opción..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Opciones de respuesta *:</label>
+            <div class="options-container" id="optionsContainer">
+              <!-- Las opciones se agregan dinámicamente -->
+            </div>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="CDUBuilder.addOption()"
+            >
+              ➕ Agregar Opción
+            </button>
+            <small style="color: #666">Al menos una opción es requerida</small>
+          </div>
+        </div>
+
+        <!-- Plantillas Rápidas -->
+        <div class="builder-section">
+          <h3 class="section-title">📋 Plantillas Rápidas</h3>
+
+          <div class="template-buttons">
+            <button
+              class="btn btn-primary"
+              onclick="CDUBuilder.loadTemplate('soporte')"
+            >
+              🔧 Soporte Técnico
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="CDUBuilder.loadTemplate('facturacion')"
+            >
+              💰 Facturación
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="CDUBuilder.loadTemplate('comercial')"
+            >
+              🛍️ Comercial
+            </button>
+            <button
+              class="btn btn-primary"
+              onclick="CDUBuilder.loadTemplate('reclamos')"
+            >
+              📞 Reclamos
+            </button>
+          </div>
+        </div>
+
+        <!-- Configuración Avanzada -->
+        <div class="builder-section">
+          <h3 class="section-title">🎛️ Configuración Avanzada</h3>
+
+          <div class="form-group">
+            <label class="form-label">Autor:</label>
+            <input
+              type="text"
+              id="author"
+              class="form-input"
+              placeholder="Tu nombre"
+              value="CDU Builder Pro"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Versión:</label>
+            <input
+              type="text"
+              id="version"
+              class="form-input"
+              placeholder="1.0"
+              value="1.0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableStats" /> Habilitar estadísticas
+              de uso
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableLogging" checked /> Habilitar
+              logging de debug
+            </label>
+          </div>
+
+          <div style="margin-top: 20px">
+            <button
+              class="btn btn-primary"
+              onclick="CDUBuilder.validateAndPreview()"
+            >
+              👁️ Previsualizar
+            </button>
+            <button
+              class="btn btn-success"
+              onclick="CDUBuilder.validateAndGenerate()"
+            >
+              📄 Generar Código
+            </button>
+            <button class="btn btn-secondary" onclick="CDUBuilder.clearAll()">
+              🗑️ Limpiar Todo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Editor Visual -->
+    <div class="tab-content" id="visual-tab">
+      <div class="visual-editor-container">
+        <!-- Barra de herramientas -->
+        <div class="toolbar">
+          <div class="toolbar-section">
+            <button id="visual-new" class="btn btn-icon" title="Nuevo flujo">
+              <i class="fas fa-file"></i>
+            </button>
+            <button id="visual-open" class="btn btn-icon" title="Abrir flujo">
+              <i class="fas fa-folder-open"></i>
+            </button>
+            <button id="visual-save" class="btn btn-icon" title="Guardar flujo">
+              <i class="fas fa-save"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-section">
+            <button
+              id="visual-undo"
+              class="btn btn-icon"
+              title="Deshacer (Ctrl+Z)"
+            >
+              <i class="fas fa-undo"></i>
+            </button>
+            <button
+              id="visual-redo"
+              class="btn btn-icon"
+              title="Rehacer (Ctrl+Y)"
+            >
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-section">
+            <button id="visual-zoom-in" class="btn btn-icon" title="Acercar">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button id="visual-zoom-out" class="btn btn-icon" title="Alejar">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button id="visual-zoom-fit" class="btn btn-icon" title="Ajustar">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+          </div>
+
+          <div class="toolbar-section">
+            <button
+              id="visual-validate"
+              class="btn btn-primary"
+              title="Validar flujo"
+            >
+              <i class="fas fa-check"></i> Validar
+            </button>
+            <button
+              id="visual-generate"
+              class="btn btn-success"
+              title="Generar CDU"
+            >
+              <i class="fas fa-code"></i> Generar CDU
+            </button>
+          </div>
+
+          <div class="toolbar-section">
+            <button
+              onclick="window.open('test-menu-destinations.html', '_blank')"
+              class="btn btn-info"
+              title="Test de Menús con Destinos"
+            >
+              <i class="fas fa-link"></i> Test Menús
+            </button>
+            <button
+              onclick="window.open('validation-final.html', '_blank')"
+              class="btn btn-warning"
+              title="Validación Completa del Sistema"
+            >
+              <i class="fas fa-clipboard-check"></i> Validación
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenedor principal del editor -->
+        <div class="visual-editor">
+          <!-- Panel de componentes -->
+          <div class="components-panel">
+            <h4>🧩 Componentes</h4>
+
+            <div class="component-category">
+              <h5>📨 Mensajes</h5>
+              <div class="component-group">
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="send-message"
+                >
+                  <div class="component-icon">💬</div>
+                  <span>Enviar Mensaje</span>
+                </div>
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="send-image"
+                >
+                  <div class="component-icon">🖼️</div>
+                  <span>Enviar Imagen</span>
+                </div>
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="send-audio"
+                >
+                  <div class="component-icon">🔊</div>
+                  <span>Enviar Audio</span>
+                </div>
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="send-video"
+                >
+                  <div class="component-icon">🎥</div>
+                  <span>Enviar Video</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="component-category">
+              <h5>🎮 Interacciones</h5>
+              <div class="component-group">
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="wait-message"
+                >
+                  <div class="component-icon">⏳</div>
+                  <span>Esperar Respuesta</span>
+                </div>
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="quick-reply"
+                >
+                  <div class="component-icon">⚡</div>
+                  <span>Respuesta Rápida</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="menu">
+                  <div class="component-icon">📋</div>
+                  <span>Menú</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="button">
+                  <div class="component-icon">🔘</div>
+                  <span>Botón</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="component-category">
+              <h5>🔄 Control de Flujo</h5>
+              <div class="component-group">
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="condition"
+                >
+                  <div class="component-icon">❓</div>
+                  <span>Condición</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="delay">
+                  <div class="component-icon">⏱️</div>
+                  <span>Delay</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="jump">
+                  <div class="component-icon">🔄</div>
+                  <span>Saltar a</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="end">
+                  <div class="component-icon">🏁</div>
+                  <span>Finalizar</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="component-category">
+              <h5>🛠️ Acciones</h5>
+              <div class="component-group">
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="set-variable"
+                >
+                  <div class="component-icon">📝</div>
+                  <span>Establecer Variable</span>
+                </div>
+                <div
+                  class="component-item"
+                  draggable="true"
+                  data-type="api-call"
+                >
+                  <div class="component-icon">🌐</div>
+                  <span>Llamada API</span>
+                </div>
+                <div class="component-item" draggable="true" data-type="log">
+                  <div class="component-icon">📊</div>
+                  <span>Log/Debug</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas principal -->
+          <div class="canvas-container">
+            <svg id="connections-svg" class="connections-layer">
+              <defs>
+                <marker
+                  id="arrowhead"
+                  markerWidth="10"
+                  markerHeight="7"
+                  refX="9"
+                  refY="3.5"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+                </marker>
+              </defs>
+            </svg>
+            <div id="visual-canvas" class="visual-canvas">
+              <!-- Los nodos se agregarán aquí dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Panel de propiedades -->
+          <div class="properties-panel">
+            <h4>⚙️ Propiedades</h4>
+            <div id="properties-content" class="properties-content">
+              <div class="no-selection">
+                <i class="fas fa-mouse-pointer"></i>
+                <p>Selecciona un nodo para editar sus propiedades</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Previsualización -->
+    <div class="tab-content" id="preview-tab">
+      <div class="preview-container">
+        <h3 class="section-title">👁️ Previsualización del Flujo</h3>
+
+        <div
+          id="validationErrors"
+          class="validation-errors"
+          style="display: none"
+        >
+          <strong>❌ Errores de validación:</strong>
+          <ul id="errorsList"></ul>
+        </div>
+
+        <div
+          id="validationSuccess"
+          class="validation-success"
+          style="display: none"
+        >
+          <strong>✅ CDU validado correctamente</strong>
+        </div>
+
+        <div class="chat-preview" id="chatPreview">
+          <div class="chat-header-preview">
+            <i class="fas fa-robot"></i> Movistar Empresas Bot
+          </div>
+          <div id="previewContent">
+            <p style="text-align: center; color: #666; margin-top: 100px">
+              Completa la configuración y presiona "Previsualizar" para ver cómo
+              se verá tu CDU
+            </p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px">
+          <button
+            class="btn btn-primary"
+            onclick="CDUBuilder.showTab('config')"
+          >
+            ⬅️ Editar
+          </button>
+          <button class="btn btn-success" onclick="CDUBuilder.showTab('code')">
+            📄 Ver Código
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Código Generado -->
+    <div class="tab-content" id="code-tab">
+      <div class="builder-section">
+        <h3 class="section-title">📄 Código Generado</h3>
+
+        <div style="margin-bottom: 20px">
+          <button
+            class="btn btn-primary"
+            onclick="CDUBuilder.validateAndGenerate()"
+          >
+            🔄 Regenerar Código
+          </button>
+          <button class="btn btn-success" onclick="CDUBuilder.downloadCode()">
+            💾 Descargar Archivo
+          </button>
+          <button class="btn btn-secondary" onclick="CDUBuilder.copyCode()">
+            📋 Copiar
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="CDUBuilder.showTab('deploy')"
+          >
+            🚀 Ir a Despliegue
+          </button>
+        </div>
+
+        <div id="statusMessage"></div>
+        <div class="code-output" id="codeOutput">
+          Genera el código para ver el resultado aquí...
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: Despliegue -->
+    <div class="tab-content" id="deploy-tab">
+      <div class="deploy-section">
+        <h3 class="section-title">🚀 Despliegue en el Emulador</h3>
+
+        <div class="deploy-status" id="deployStatus">
+          <i class="fas fa-info-circle"></i>
+          <p>Genera y valida tu CDU para poder desplegarlo</p>
+        </div>
+
+        <div class="deploy-actions" id="deployActions">
+          <button
+            class="btn btn-success"
+            id="testDeployBtn"
+            onclick="CDUBuilder.testDeploy()"
+            style="display: none"
+          >
+            🧪 Prueba en Temporal
+          </button>
+          <button
+            class="btn btn-primary"
+            id="fullDeployBtn"
+            onclick="CDUBuilder.fullDeploy()"
+            style="display: none"
+          >
+            🚀 Desplegar Definitivo
+          </button>
+          <button
+            class="btn btn-secondary"
+            onclick="CDUBuilder.showTab('code')"
+          >
+            ⬅️ Volver al Código
+          </button>
+        </div>
+
+        <div id="deployResults" style="margin-top: 20px"></div>
+      </div>
+    </div>
+
+    <!-- Scripts modulares -->
+    <script src="js/config.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/validator.js"></script>
+    <script src="js/code-generator.js"></script>
+    <script src="js/preview.js"></script>
+    <script src="js/deploy.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Scripts del Editor Visual -->
+    <script src="visual-editor/visual-editor-config.js"></script>
+    <script src="visual-editor/visual-node-manager.js"></script>
+    <script src="visual-editor/visual-connection-manager.js"></script>
+    <script src="visual-editor/visual-drag-drop.js"></script>
+    <script src="visual-editor/visual-components-panel.js"></script>
+    <script src="visual-editor/visual-properties-panel.js"></script>
+    <script src="visual-editor/visual-validation-panel.js"></script>
+    <script src="visual-editor/visual-flow-converter.js"></script>
+    <script src="visual-editor/visual-editor.js"></script>
+
+    <!-- Inicialización -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Iniciando CDU Builder Pro...");
+        CDUBuilder.init();
+
+        // Verificar que todos los módulos del editor visual estén cargados
+        const visualModules = [
+          "VisualEditorConfig",
+          "VisualNodeManager",
+          "VisualConnectionManager",
+          "VisualDragDrop",
+          "VisualComponentsPanel",
+          "VisualPropertiesPanel",
+          "VisualValidationPanel",
+          "VisualFlowConverter",
+          "VisualEditor",
+        ];
+
+        let allLoaded = true;
+        visualModules.forEach((module) => {
+          if (!window[module]) {
+            console.error("Módulo no cargado:", module);
+            allLoaded = false;
+          }
+        });
+
+        if (allLoaded) {
+          console.log(
+            "✅ Todos los módulos del editor visual cargados correctamente"
+          );
+        } else {
+          console.warn("⚠️ Algunos módulos del editor visual no se cargaron");
+        }
+      });
+    </script>
+  </body>
+</html>

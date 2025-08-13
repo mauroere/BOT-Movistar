@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🔧 Test de Auto-corrección</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .status {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border-left: 4px solid #17a2b8;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #results {
+        margin-top: 20px;
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>🔧 Test de Auto-corrección - ConnectionManager</h1>
+
+      <div class="status info">
+        <h3>🎯 Problema Resuelto</h3>
+        <p>
+          <strong>Error original:</strong>
+          <code>getAllConnections is not a function</code>
+        </p>
+        <p>
+          <strong>Solución:</strong> Agregado método
+          <code>getAllConnections()</code> como alias de
+          <code>getConnections()</code>
+        </p>
+      </div>
+
+      <button onclick="testConnectionManager()">
+        🧪 Test ConnectionManager
+      </button>
+      <button onclick="testAutoCorrection()">🔧 Test Auto-corrección</button>
+      <button onclick="testValidationPanel()">
+        ✅ Test Panel de Validación
+      </button>
+
+      <div id="results"></div>
+    </div>
+
+    <!-- Cargar módulos necesarios -->
+    <script src="visual-editor/visual-editor-config.js"></script>
+    <script src="visual-editor/visual-node-manager.js"></script>
+    <script src="visual-editor/visual-connection-manager.js"></script>
+    <script src="visual-editor/visual-validation-panel.js"></script>
+
+    <script>
+      function log(message, type = "info") {
+        const results = document.getElementById("results");
+        const div = document.createElement("div");
+        div.className = `status ${type}`;
+        div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+        results.appendChild(div);
+        results.scrollTop = results.scrollHeight;
+      }
+
+      function testConnectionManager() {
+        log("🧪 <strong>Probando ConnectionManager...</strong>");
+
+        try {
+          // Test 1: Verificar que existe
+          if (typeof window.VisualConnectionManager === "undefined") {
+            log("❌ VisualConnectionManager no está definido", "error");
+            return;
+          }
+          log("✅ VisualConnectionManager está disponible", "success");
+
+          // Test 2: Verificar método getConnections
+          if (
+            typeof window.VisualConnectionManager.getConnections === "function"
+          ) {
+            const connections1 =
+              window.VisualConnectionManager.getConnections();
+            log("✅ getConnections() funciona correctamente", "success");
+            log(`📊 Conexiones encontradas: ${connections1.length}`, "info");
+          } else {
+            log("❌ getConnections() no es una función", "error");
+          }
+
+          // Test 3: Verificar método getAllConnections (el que causaba el error)
+          if (
+            typeof window.VisualConnectionManager.getAllConnections ===
+            "function"
+          ) {
+            const connections2 =
+              window.VisualConnectionManager.getAllConnections();
+            log(
+              "✅ getAllConnections() ahora funciona correctamente",
+              "success"
+            );
+            log(`📊 Conexiones encontradas: ${connections2.length}`, "info");
+          } else {
+            log("❌ getAllConnections() no es una función", "error");
+          }
+
+          // Test 4: Verificar que ambos métodos devuelven lo mismo
+          const conn1 = window.VisualConnectionManager.getConnections();
+          const conn2 = window.VisualConnectionManager.getAllConnections();
+          if (conn1.length === conn2.length) {
+            log("✅ Ambos métodos devuelven el mismo resultado", "success");
+          } else {
+            log("⚠️ Los métodos devuelven resultados diferentes", "warning");
+          }
+        } catch (error) {
+          log(`❌ <strong>Error:</strong> ${error.message}`, "error");
+          console.error("Error en test:", error);
+        }
+      }
+
+      function testAutoCorrection() {
+        log("🔧 <strong>Probando Auto-corrección...</strong>");
+
+        try {
+          // Verificar que el módulo de validación existe
+          if (typeof window.VisualValidationPanel === "undefined") {
+            log("❌ VisualValidationPanel no está definido", "error");
+            return;
+          }
+          log("✅ VisualValidationPanel está disponible", "success");
+
+          // Verificar que la función autoFix existe
+          if (typeof window.VisualValidationPanel.autoFix === "function") {
+            log("✅ Función autoFix disponible", "success");
+
+            // Ejecutar auto-corrección
+            try {
+              window.VisualValidationPanel.autoFix();
+              log("✅ Auto-corrección ejecutada sin errores", "success");
+            } catch (autoFixError) {
+              log(
+                `❌ Error en auto-corrección: ${autoFixError.message}`,
+                "error"
+              );
+            }
+          } else {
+            log("❌ Función autoFix no disponible", "error");
+          }
+        } catch (error) {
+          log(`❌ <strong>Error:</strong> ${error.message}`, "error");
+          console.error("Error en test:", error);
+        }
+      }
+
+      function testValidationPanel() {
+        log("✅ <strong>Probando Panel de Validación...</strong>");
+
+        try {
+          // Test completo del sistema de validación
+          if (window.VisualValidationPanel) {
+            // Test 1: Inicialización
+            if (typeof window.VisualValidationPanel.init === "function") {
+              window.VisualValidationPanel.init();
+              log("✅ Panel de validación inicializado", "success");
+            }
+
+            // Test 2: Función validate
+            if (typeof window.VisualValidationPanel.validate === "function") {
+              try {
+                const result = window.VisualValidationPanel.validate();
+                log("✅ Función validate ejecutada correctamente", "success");
+              } catch (validateError) {
+                log(`❌ Error en validate: ${validateError.message}`, "error");
+              }
+            }
+
+            log("🎉 <strong>Todas las pruebas completadas</strong>", "success");
+          } else {
+            log("❌ VisualValidationPanel no disponible", "error");
+          }
+        } catch (error) {
+          log(`❌ <strong>Error:</strong> ${error.message}`, "error");
+          console.error("Error en test:", error);
+        }
+      }
+
+      // Inicialización automática
+      document.addEventListener("DOMContentLoaded", function () {
+        log("🚀 <strong>Test de auto-corrección iniciado</strong>", "info");
+        log(
+          '🔍 El problema "getAllConnections is not a function" debería estar resuelto',
+          "info"
+        );
+
+        // Test automático al cargar
+        setTimeout(() => {
+          testConnectionManager();
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

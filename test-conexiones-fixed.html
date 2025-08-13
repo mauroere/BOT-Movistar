@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Conexiones - Versión Corregida</title>
+    <link rel="stylesheet" href="cdu-builder/visual-editor/visual-editor.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+      }
+
+      .test-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .test-status {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        max-width: 300px;
+        z-index: 1000;
+      }
+
+      .status-line {
+        margin: 5px 0;
+      }
+
+      .status-success {
+        color: #2ecc71;
+      }
+      .status-error {
+        color: #e74c3c;
+      }
+      .status-info {
+        color: #3498db;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-header">
+      <h1>🔗 Test de Conexiones - Versión Corregida</h1>
+      <p>Prueba las conexiones sin errores repetitivos</p>
+    </div>
+
+    <div class="test-status" id="status">
+      <div class="status-line status-info">🟡 Inicializando...</div>
+    </div>
+
+    <div id="visual-editor">
+      <div class="visual-editor-workspace">
+        <div class="components-panel">
+          <h4>📦 Componentes</h4>
+          <div class="component-list">
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="message"
+            >
+              <div class="component-icon">📝</div>
+              <div class="component-label">Mensaje</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="question"
+            >
+              <div class="component-icon">❓</div>
+              <div class="component-label">Pregunta</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="conditional"
+            >
+              <div class="component-icon">🔀</div>
+              <div class="component-label">Condicional</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="visual-canvas-container">
+          <svg id="connections-svg" class="connections-layer">
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+              </marker>
+            </defs>
+          </svg>
+          <div id="visual-canvas" class="visual-canvas">
+            <div class="canvas-placeholder">
+              <div class="placeholder-icon">🎯</div>
+              <div class="placeholder-text">
+                Arrastra componentes aquí para empezar
+              </div>
+              <div class="placeholder-instruction">
+                Luego conecta los puertos: 🟢 SALIDA → 🔴 ENTRADA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="properties-panel">
+          <h4>⚙️ Propiedades</h4>
+          <div id="node-properties">
+            <p class="no-selection">Selecciona un componente para editar</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual-editor-toolbar" style="order: -1">
+        <div class="toolbar-section">
+          <h3>🔗 Test de Conexiones</h3>
+        </div>
+        <div class="toolbar-controls">
+          <button id="clear-canvas" class="btn-secondary">🗑️ Limpiar</button>
+          <button id="test-connection" class="btn-primary">🧪 Test Auto</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts del editor visual -->
+    <script src="cdu-builder/visual-editor/visual-editor-config.js"></script>
+    <script src="cdu-builder/visual-editor/visual-components-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-node-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-connection-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-properties-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-flow-converter.js"></script>
+    <script src="cdu-builder/visual-editor/visual-editor.js"></script>
+
+    <script>
+      // Sistema de status en tiempo real
+      const statusDiv = document.getElementById("status");
+      let connectionCount = 0;
+      let nodeCount = 0;
+
+      function updateStatus(message, type = "info") {
+        const statusLine = document.createElement("div");
+        statusLine.className = `status-line status-${type}`;
+        statusLine.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+
+        statusDiv.appendChild(statusLine);
+
+        // Mantener solo las últimas 10 líneas
+        while (statusDiv.children.length > 10) {
+          statusDiv.removeChild(statusDiv.firstChild);
+        }
+
+        statusDiv.scrollTop = statusDiv.scrollHeight;
+      }
+
+      // Escuchar eventos del sistema
+      document.addEventListener("connection-created", (e) => {
+        connectionCount++;
+        updateStatus(
+          `✅ Conexión #${connectionCount} creada: ${e.detail.from} → ${e.detail.to}`,
+          "success"
+        );
+      });
+
+      document.addEventListener("node-created", (e) => {
+        nodeCount++;
+        updateStatus(`📦 Nodo #${nodeCount} creado: ${e.detail.type}`, "info");
+      });
+
+      // Inicializar sistema
+      window.addEventListener("load", () => {
+        updateStatus("🚀 Sistema iniciado", "success");
+
+        if (window.VisualEditor) {
+          window.VisualEditor.init();
+          updateStatus("🎨 Editor visual inicializado", "success");
+        } else {
+          updateStatus("❌ Error: Editor visual no disponible", "error");
+        }
+      });
+
+      // Botones de test
+      document.getElementById("clear-canvas").addEventListener("click", () => {
+        if (window.VisualEditor) {
+          window.VisualEditor.clearCanvas();
+          updateStatus("🗑️ Canvas limpiado", "info");
+          connectionCount = 0;
+          nodeCount = 0;
+        }
+      });
+
+      document
+        .getElementById("test-connection")
+        .addEventListener("click", () => {
+          updateStatus("🧪 Iniciando test automático...", "info");
+
+          // Crear dos nodos de prueba
+          if (window.VisualNodeManager) {
+            const node1 = window.VisualNodeManager.createNode("message", {
+              x: 100,
+              y: 100,
+            });
+            const node2 = window.VisualNodeManager.createNode("question", {
+              x: 300,
+              y: 100,
+            });
+
+            updateStatus(`📦 Nodos creados: ${node1.id} y ${node2.id}`, "info");
+
+            // Intentar crear conexión automáticamente
+            setTimeout(() => {
+              if (window.VisualConnectionManager) {
+                try {
+                  const connection =
+                    window.VisualConnectionManager.createConnection(
+                      node1.id,
+                      0,
+                      node2.id,
+                      0
+                    );
+                  updateStatus(
+                    `🔗 Conexión automática creada: ${connection.id}`,
+                    "success"
+                  );
+                } catch (error) {
+                  updateStatus(
+                    `❌ Error en conexión automática: ${error.message}`,
+                    "error"
+                  );
+                }
+              }
+            }, 500);
+          }
+        });
+
+      // Error handler global
+      window.addEventListener("error", (e) => {
+        if (!e.message.includes("node-start")) {
+          // Filtrar errores conocidos
+          updateStatus(`❌ Error: ${e.message}`, "error");
+        }
+      });
+    </script>
+  </body>
+</html>

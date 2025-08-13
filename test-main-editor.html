@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Main Visual Editor</title>
+    <link rel="stylesheet" href="cdu-builder/visual-editor/visual-editor.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f5f5f5;
+      }
+      .test-container {
+        display: flex;
+        height: 100vh;
+      }
+      .test-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        z-index: 1000;
+      }
+      .test-content {
+        margin-top: 60px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-header">
+      <h2>Test Main Visual Editor - Drag & Drop</h2>
+      <div id="status">Cargando...</div>
+    </div>
+
+    <div class="test-content">
+      <div class="visual-editor">
+        <!-- Panel de componentes -->
+        <div class="components-panel">
+          <div class="components-header">
+            <h3>Componentes</h3>
+          </div>
+          <div id="componentsList" class="components-list">
+            <!-- Los componentes se cargarán aquí -->
+          </div>
+        </div>
+
+        <!-- Canvas principal -->
+        <div class="editor-main">
+          <div id="visualCanvas" class="visual-canvas">
+            <div class="canvas-grid"></div>
+            <div id="nodesContainer" class="nodes-container"></div>
+            <svg id="connectionsLayer" class="connections-layer"></svg>
+          </div>
+        </div>
+
+        <!-- Panel de propiedades -->
+        <div id="propertiesPanel" class="properties-panel">
+          <div class="properties-header">
+            <h3>Propiedades</h3>
+          </div>
+          <div id="propertiesContent" class="properties-content">
+            <p>Selecciona un nodo para editar sus propiedades</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="cdu-builder/visual-editor/visual-editor-config.js"></script>
+    <script src="cdu-builder/visual-editor/visual-node-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-connection-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-components-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-properties-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-flow-converter.js"></script>
+    <script src="cdu-builder/visual-editor/visual-editor.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const statusEl = document.getElementById("status");
+
+        try {
+          console.log("🔧 Inicializando test del editor principal...");
+          statusEl.textContent = "Inicializando...";
+
+          // Verificar que todos los módulos estén cargados
+          const modules = [
+            "VisualEditorConfig",
+            "VisualNodeManager",
+            "VisualConnectionManager",
+            "VisualComponentsPanel",
+            "VisualPropertiesPanel",
+            "VisualFlowConverter",
+            "VisualEditor",
+          ];
+
+          const missingModules = modules.filter((m) => !window[m]);
+          if (missingModules.length > 0) {
+            throw new Error("Módulos faltantes: " + missingModules.join(", "));
+          }
+
+          console.log("✅ Todos los módulos cargados correctamente");
+
+          // Inicializar el editor
+          VisualEditor.init();
+
+          statusEl.textContent = "✅ Editor inicializado - Drag & Drop listo";
+          statusEl.style.color = "green";
+
+          console.log("🎯 Editor principal inicializado correctamente");
+          console.log("📝 Instrucciones:");
+          console.log(
+            "   1. Arrastra componentes del panel izquierdo al canvas"
+          );
+          console.log(
+            "   2. Los nodos deberían aparecer donde sueltes el componente"
+          );
+          console.log("   3. Verifica que no hay errores en la consola");
+        } catch (error) {
+          console.error("❌ Error en la inicialización:", error);
+          statusEl.textContent = "❌ Error: " + error.message;
+          statusEl.style.color = "red";
+        }
+      });
+    </script>
+  </body>
+</html>

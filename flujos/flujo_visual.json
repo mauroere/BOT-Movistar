@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-08-12T12:31:27.065Z",
+  "nodes": [
+    {
+      "id": "send-message_1",
+      "type": "send-message",
+      "x": 279,
+      "y": 202,
+      "width": 200,
+      "height": 80,
+      "properties": {
+        "delay": 1000,
+        "text": "fhfghdfhdfgdgfd"
+      }
+    },
+    {
+      "id": "send-audio_2",
+      "type": "send-audio",
+      "x": 282,
+      "y": 357,
+      "width": 200,
+      "height": 80,
+      "properties": {
+        "delay": 1000
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_1",
+      "from": {
+        "nodeId": "send-message_1",
+        "portIndex": 0
+      },
+      "to": {
+        "nodeId": "send-audio_2",
+        "portIndex": 0
+      }
+    }
+  ],
+  "metadata": {
+    "id": "visual_cdu",
+    "name": "CDU Generado Visualmente",
+    "description": "CDU creado con el editor visual",
+    "author": "CDU Builder Pro",
+    "version": "1.0",
+    "category": "General"
+  }
+}

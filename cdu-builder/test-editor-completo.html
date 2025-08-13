@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor Visual - Test Completo</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="visual-editor/visual-editor.css" />
+  </head>
+  <body>
+    <div class="builder-header">
+      <h1>🎨 Test Editor Visual</h1>
+      <p>Prueba completa del Editor Visual con Drag & Drop</p>
+    </div>
+
+    <!-- Editor Visual Test -->
+    <div class="visual-editor-container">
+      <!-- Barra de herramientas -->
+      <div class="toolbar">
+        <div class="toolbar-section">
+          <button id="visual-validate" class="btn btn-primary">
+            <i class="fas fa-check"></i> Validar
+          </button>
+          <button id="visual-generate" class="btn btn-success">
+            <i class="fas fa-code"></i> Generar CDU
+          </button>
+          <button onclick="clearCanvas()" class="btn btn-secondary">
+            <i class="fas fa-trash"></i> Limpiar
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor principal del editor -->
+      <div class="visual-editor">
+        <!-- Panel de componentes -->
+        <div class="components-panel">
+          <h4>🧩 Componentes</h4>
+
+          <div class="component-category">
+            <h5>📨 Mensajes</h5>
+            <div class="component-group">
+              <div
+                class="component-item"
+                draggable="true"
+                data-type="send-message"
+              >
+                <div class="component-icon">💬</div>
+                <span>Enviar Mensaje</span>
+              </div>
+              <div
+                class="component-item"
+                draggable="true"
+                data-type="send-image"
+              >
+                <div class="component-icon">🖼️</div>
+                <span>Enviar Imagen</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="component-category">
+            <h5>🎮 Interacciones</h5>
+            <div class="component-group">
+              <div
+                class="component-item"
+                draggable="true"
+                data-type="wait-message"
+              >
+                <div class="component-icon">⏳</div>
+                <span>Esperar Respuesta</span>
+              </div>
+              <div class="component-item" draggable="true" data-type="menu">
+                <div class="component-icon">📋</div>
+                <span>Menú</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas principal -->
+        <div class="canvas-container">
+          <div id="visual-canvas" class="visual-canvas">
+            <!-- Nodo de inicio -->
+            <div
+              class="visual-node start-node"
+              id="start-node"
+              data-node-id="start"
+              style="left: 100px; top: 100px"
+            >
+              <div class="node-header" style="background-color: #4caf50">
+                <div class="node-icon">🚀</div>
+                <div class="node-title">Inicio</div>
+              </div>
+              <div class="node-body">
+                <div class="node-ports">
+                  <div
+                    class="node-port output"
+                    data-port-type="output"
+                    data-port-index="0"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de propiedades -->
+        <div class="properties-panel">
+          <h4>⚙️ Propiedades</h4>
+          <div id="properties-content" class="properties-content">
+            <div class="no-selection">
+              <i class="fas fa-mouse-pointer"></i>
+              <p>Selecciona un nodo para editar sus propiedades</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log de debug -->
+    <div style="margin-top: 20px">
+      <h3>🐛 Log de Debug</h3>
+      <div
+        id="debug-log"
+        style="
+          height: 150px;
+          overflow-y: auto;
+          border: 1px solid #ccc;
+          padding: 10px;
+          font-family: monospace;
+          font-size: 12px;
+          background: #f5f5f5;
+        "
+      ></div>
+      <button onclick="clearLog()">Limpiar Log</button>
+    </div>
+
+    <script>
+      let nodeCounter = 0;
+      const nodes = new Map();
+
+      function log(message) {
+        const logEl = document.getElementById("debug-log");
+        const timestamp = new Date().toLocaleTimeString();
+        logEl.innerHTML += `[${timestamp}] ${message}<br>`;
+        logEl.scrollTop = logEl.scrollHeight;
+        console.log(message);
+      }
+
+      function clearLog() {
+        document.getElementById("debug-log").innerHTML = "";
+      }
+
+      function clearCanvas() {
+        const canvas = document.getElementById("visual-canvas");
+        const nodesToRemove = canvas.querySelectorAll(
+          ".visual-node:not(.start-node)"
+        );
+        nodesToRemove.forEach((node) => node.remove());
+        nodes.clear();
+        nodeCounter = 0;
+        log("Canvas limpiado");
+      }
+
+      // Configuración básica de tipos de nodos
+      const nodeTypes = {
+        "send-message": {
+          label: "Enviar Mensaje",
+          icon: "💬",
+          color: "#4CAF50",
+        },
+        "send-image": {
+          label: "Enviar Imagen",
+          icon: "🖼️",
+          color: "#2196F3",
+        },
+        "wait-message": {
+          label: "Esperar Respuesta",
+          icon: "⏳",
+          color: "#9C27B0",
+        },
+        menu: {
+          label: "Menú",
+          icon: "📋",
+          color: "#607D8B",
+        },
+      };
+
+      // Drag and Drop
+      document.addEventListener("dragstart", (e) => {
+        if (e.target.classList.contains("component-item")) {
+          const nodeType = e.target.dataset.type;
+          log(`🚀 DRAGSTART: ${nodeType}`);
+          e.dataTransfer.setData("text/plain", nodeType);
+          e.dataTransfer.effectAllowed = "copy";
+          e.target.classList.add("dragging");
+        }
+      });
+
+      document.addEventListener("dragend", (e) => {
+        if (e.target.classList.contains("component-item")) {
+          log("🏁 DRAGEND");
+          e.target.classList.remove("dragging");
+        }
+      });
+
+      const canvas = document.getElementById("visual-canvas");
+
+      canvas.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        canvas.classList.add("drag-over");
+      });
+
+      canvas.addEventListener("dragleave", (e) => {
+        if (e.target === canvas) {
+          canvas.classList.remove("drag-over");
+        }
+      });
+
+      canvas.addEventListener("drop", (e) => {
+        e.preventDefault();
+        canvas.classList.remove("drag-over");
+
+        const nodeType = e.dataTransfer.getData("text/plain");
+        log(`⬇️ DROP: ${nodeType} en posición (${e.offsetX}, ${e.offsetY})`);
+
+        if (nodeTypes[nodeType]) {
+          createNode(nodeType, e.offsetX, e.offsetY);
+        }
+      });
+
+      function createNode(type, x, y) {
+        const config = nodeTypes[type];
+        nodeCounter++;
+        const nodeId = type + "_" + nodeCounter;
+
+        const node = document.createElement("div");
+        node.className = "visual-node";
+        node.id = "node-" + nodeId;
+        node.dataset.nodeId = nodeId;
+        node.style.left = x + "px";
+        node.style.top = y + "px";
+        node.style.borderColor = config.color;
+
+        node.innerHTML = `
+                <div class="node-header" style="background-color: ${config.color}">
+                    <div class="node-icon">${config.icon}</div>
+                    <div class="node-title">${config.label}</div>
+                    <div class="node-controls">
+                        <button class="node-btn delete-btn" onclick="deleteNode('${nodeId}')" title="Eliminar">✕</button>
+                    </div>
+                </div>
+                <div class="node-body">
+                    <div class="node-content">
+                        <div class="node-property">Configurar...</div>
+                    </div>
+                    <div class="node-ports">
+                        <div class="node-port input" data-port-type="input" data-port-index="0"></div>
+                        <div class="node-port output" data-port-type="output" data-port-index="0"></div>
+                    </div>
+                </div>
+            `;
+
+        // Hacer nodo seleccionable
+        node.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectNode(nodeId);
+        });
+
+        canvas.appendChild(node);
+        nodes.set(nodeId, { type, x, y, element: node });
+
+        log(`✅ Nodo creado: ${nodeId} (${config.label})`);
+        selectNode(nodeId);
+      }
+
+      function deleteNode(nodeId) {
+        const element = document.getElementById("node-" + nodeId);
+        if (element && confirm("¿Eliminar nodo?")) {
+          element.remove();
+          nodes.delete(nodeId);
+          log(`🗑️ Nodo eliminado: ${nodeId}`);
+          clearProperties();
+        }
+      }
+
+      let selectedNodeId = null;
+
+      function selectNode(nodeId) {
+        // Deseleccionar anterior
+        if (selectedNodeId) {
+          const prevElement = document.getElementById("node-" + selectedNodeId);
+          if (prevElement) prevElement.classList.remove("selected");
+        }
+
+        // Seleccionar nuevo
+        selectedNodeId = nodeId;
+        const element = document.getElementById("node-" + nodeId);
+        if (element) {
+          element.classList.add("selected");
+          log(`🎯 Nodo seleccionado: ${nodeId}`);
+          showProperties(nodeId);
+        }
+      }
+
+      function showProperties(nodeId) {
+        const propertiesContent = document.getElementById("properties-content");
+        const nodeData = nodes.get(nodeId);
+
+        if (nodeData) {
+          const config = nodeTypes[nodeData.type];
+          propertiesContent.innerHTML = `
+                    <div class="properties-header">
+                        <div class="node-info">
+                            <span class="node-icon">${config.icon}</span>
+                            <span class="node-name">${config.label}</span>
+                        </div>
+                        <div class="node-id">ID: ${nodeId}</div>
+                    </div>
+                    <div class="properties-form">
+                        <div class="property-field">
+                            <label class="property-label">Texto:</label>
+                            <textarea class="property-input form-input" rows="3" placeholder="Ingresa el texto..."></textarea>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Delay (ms):</label>
+                            <input type="number" class="property-input form-input" value="1000">
+                        </div>
+                    </div>
+                `;
+        }
+      }
+
+      function clearProperties() {
+        selectedNodeId = null;
+        document.getElementById("properties-content").innerHTML = `
+                <div class="no-selection">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p>Selecciona un nodo para editar sus propiedades</p>
+                </div>
+            `;
+      }
+
+      // Click en canvas vacío
+      canvas.addEventListener("click", (e) => {
+        if (e.target === canvas) {
+          clearProperties();
+          // Deseleccionar todos
+          document.querySelectorAll(".visual-node.selected").forEach((node) => {
+            node.classList.remove("selected");
+          });
+          selectedNodeId = null;
+          log("❌ Selección limpiada");
+        }
+      });
+
+      // Botones de acción
+      document
+        .getElementById("visual-validate")
+        .addEventListener("click", () => {
+          log(`🔍 Validando flujo... ${nodes.size} nodos encontrados`);
+          alert(`Flujo válido con ${nodes.size} nodos`);
+        });
+
+      document
+        .getElementById("visual-generate")
+        .addEventListener("click", () => {
+          log(`🔧 Generando CDU... ${nodes.size} nodos`);
+          alert("CDU generado correctamente");
+        });
+
+      // Log inicial
+      log("🎨 Editor Visual Test iniciado - ¡Arrastra componentes al canvas!");
+    </script>
+  </body>
+</html>

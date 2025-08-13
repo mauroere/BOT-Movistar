@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prueba de Conexiones - Editor Visual</title>
+    <link rel="stylesheet" href="cdu-builder/visual-editor/visual-editor.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #f5f7fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .debug-info {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 1000;
+        max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔗 Prueba de Conexiones</h1>
+    <p>
+      1. Arrastra componentes al canvas<br />2. Haz clic en puerto VERDE
+      (salida) y arrastra a puerto ROJO (entrada)
+    </p>
+
+    <div id="debug-info" class="debug-info">Estado: Esperando...</div>
+
+    <div id="visual-editor">
+      <div class="visual-editor-workspace">
+        <div class="components-panel">
+          <h4>📦 Componentes</h4>
+          <div class="component-list">
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="message"
+            >
+              <div class="component-icon">📝</div>
+              <div class="component-label">Mensaje</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="question"
+            >
+              <div class="component-icon">❓</div>
+              <div class="component-label">Pregunta</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="conditional"
+            >
+              <div class="component-icon">🔀</div>
+              <div class="component-label">Condicional</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="visual-canvas-container">
+          <svg id="connections-svg" class="connections-layer">
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+              </marker>
+            </defs>
+          </svg>
+          <div id="visual-canvas" class="visual-canvas">
+            <div class="canvas-placeholder">
+              <div class="placeholder-icon">🎯</div>
+              <div class="placeholder-text">Arrastra componentes aquí</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="properties-panel">
+          <h4>⚙️ Propiedades</h4>
+          <div id="node-properties">
+            <p class="no-selection">Selecciona un componente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts del editor visual -->
+    <script src="cdu-builder/visual-editor/visual-editor-config.js"></script>
+    <script src="cdu-builder/visual-editor/visual-components-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-node-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-connection-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-properties-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-flow-converter.js"></script>
+    <script src="cdu-builder/visual-editor/visual-editor.js"></script>
+
+    <script>
+      // Debug info
+      const debugInfo = document.getElementById("debug-info");
+
+      function updateDebug(message) {
+        debugInfo.innerHTML = `
+                Estado: ${message}<br>
+                Tiempo: ${new Date().toLocaleTimeString()}<br>
+                Conexiones: ${
+                  window.VisualConnectionManager
+                    ? window.VisualConnectionManager.connections.size
+                    : 0
+                }
+            `;
+      }
+
+      // Override console.log para mostrar en debug
+      const originalLog = console.log;
+      console.log = function (...args) {
+        originalLog.apply(console, args);
+        if (args[0] && typeof args[0] === "string") {
+          updateDebug(args[0]);
+        }
+      };
+
+      // Inicializar cuando todo esté cargado
+      window.addEventListener("load", () => {
+        updateDebug("Inicializando...");
+
+        setTimeout(() => {
+          if (window.VisualEditor) {
+            window.VisualEditor.init();
+            updateDebug("Editor iniciado ✅");
+          } else {
+            updateDebug("❌ Error: Editor no encontrado");
+          }
+        }, 500);
+      });
+
+      // Escuchar eventos de conexión
+      document.addEventListener("connection-created", (e) => {
+        updateDebug(`✅ Conexión creada: ${e.detail.from} → ${e.detail.to}`);
+      });
+
+      document.addEventListener("connection-failed", (e) => {
+        updateDebug(`❌ Conexión fallida: ${e.detail.reason}`);
+      });
+    </script>
+  </body>
+</html>

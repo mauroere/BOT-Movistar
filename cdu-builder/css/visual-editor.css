@@ -1,0 +1,542 @@
+/* Editor Visual de Flujos - Estilos */
+
+/* === CONTENEDOR PRINCIPAL === */
+.visual-editor-container {
+    display: flex;
+    height: 70vh;
+    background: #f8f9fa;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* === PANEL DE COMPONENTES === */
+.components-panel {
+    width: 250px;
+    background: white;
+    border-right: 1px solid #e1e8ed;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.components-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.component-category {
+    margin-bottom: 20px;
+}
+
+.component-category h4 {
+    font-size: 0.9em;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* === COMPONENTES DRAGGABLES === */
+.draggable-component {
+    background: #667eea;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.draggable-component:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.draggable-component:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.draggable-component.message {
+    background: #48bb78;
+}
+
+.draggable-component.message:hover {
+    background: #38a169;
+}
+
+.draggable-component.decision {
+    background: #ed8936;
+}
+
+.draggable-component.decision:hover {
+    background: #dd7924;
+}
+
+.draggable-component.action {
+    background: #9f7aea;
+}
+
+.draggable-component.action:hover {
+    background: #8b5cf6;
+}
+
+.draggable-component.end {
+    background: #f56565;
+}
+
+.draggable-component.end:hover {
+    background: #e53e3e;
+}
+
+/* === CANVAS === */
+.flow-canvas {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(
+        transparent 20px, 
+        rgba(0,0,0,0.03) 1px, 
+        transparent 1px
+    ),
+    linear-gradient(
+        90deg, 
+        transparent 20px, 
+        rgba(0,0,0,0.03) 1px, 
+        transparent 1px
+    );
+    background-size: 21px 21px;
+    overflow: auto;
+}
+
+.canvas-content {
+    min-width: 100%;
+    min-height: 100%;
+    position: relative;
+}
+
+/* === NODOS DEL FLUJO === */
+.flow-node {
+    position: absolute;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 200px;
+    max-width: 300px;
+    cursor: move;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.flow-node:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+.flow-node.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.flow-node.dragging {
+    transform: rotate(2deg);
+    z-index: 1000;
+    opacity: 0.9;
+}
+
+/* === TIPOS DE NODOS === */
+.flow-node.message {
+    border-left: 4px solid #48bb78;
+}
+
+.flow-node.decision {
+    border-left: 4px solid #ed8936;
+}
+
+.flow-node.action {
+    border-left: 4px solid #9f7aea;
+}
+
+.flow-node.end {
+    border-left: 4px solid #f56565;
+}
+
+.flow-node.start {
+    border-left: 4px solid #4299e1;
+    background: linear-gradient(135deg, #ebf8ff, #ffffff);
+}
+
+/* === HEADER DEL NODO === */
+.node-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.node-type-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+}
+
+.node-type-icon.message { background: #48bb78; }
+.node-type-icon.decision { background: #ed8936; }
+.node-type-icon.action { background: #9f7aea; }
+.node-type-icon.end { background: #f56565; }
+.node-type-icon.start { background: #4299e1; }
+
+/* === CONTENIDO DEL NODO === */
+.node-content {
+    margin-bottom: 10px;
+}
+
+.node-content textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+}
+
+.node-content input {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 13px;
+}
+
+.node-options {
+    margin-top: 10px;
+}
+
+.node-option {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.node-option input {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.node-option button {
+    background: #f56565;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+/* === PUNTOS DE CONEXIÓN === */
+.connection-point {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.connection-point:hover {
+    transform: scale(1.3);
+    background: #5a67d8;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.connection-point.output {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.connection-point.input {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.connection-point.active {
+    background: #48bb78;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(72, 187, 120, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
+}
+
+/* === CONEXIONES === */
+.connection-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.connection-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.connection-path {
+    fill: none;
+    stroke: #667eea;
+    stroke-width: 2;
+    marker-end: url(#arrowhead);
+}
+
+/* === PANEL DE PROPIEDADES === */
+.properties-panel {
+    width: 280px;
+    background: white;
+    border-left: 1px solid #e1e8ed;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.properties-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #2d3748;
+}
+
+.property-group {
+    margin-bottom: 20px;
+}
+
+.property-label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+.property-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.property-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* === TOOLBAR === */
+.visual-toolbar {
+    background: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e1e8ed;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.toolbar-btn {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.toolbar-btn:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.toolbar-btn.primary {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.toolbar-btn.primary:hover {
+    background: #5a67d8;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background: #e2e8f0;
+    margin: 0 5px;
+}
+
+/* === ZONA DE DROP === */
+.drop-zone {
+    position: absolute;
+    border: 2px dashed #cbd5e0;
+    border-radius: 12px;
+    background: rgba(102, 126, 234, 0.05);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #667eea;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.drop-zone.active {
+    display: flex;
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* === MINIMAP === */
+.minimap {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.minimap-content {
+    transform-origin: top left;
+    width: 100%;
+    height: 100%;
+}
+
+.minimap-viewport {
+    position: absolute;
+    border: 2px solid #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    pointer-events: none;
+}
+
+/* === CONTEXTO MENÚ === */
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 8px 0;
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2d3748;
+}
+
+.context-menu-item:hover {
+    background: #f7fafc;
+}
+
+.context-menu-item.danger {
+    color: #e53e3e;
+}
+
+.context-menu-item.danger:hover {
+    background: #fed7d7;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .visual-editor-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .components-panel,
+    .properties-panel {
+        width: 100%;
+        height: 200px;
+    }
+    
+    .flow-canvas {
+        height: 400px;
+    }
+}
+
+/* === ANIMACIONES === */
+.node-enter {
+    animation: nodeEnter 0.3s ease-out;
+}
+
+@keyframes nodeEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.connection-enter {
+    animation: connectionEnter 0.5s ease-out;
+}
+
+@keyframes connectionEnter {
+    from {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+    }
+    to {
+        stroke-dasharray: 0;
+        stroke-dashoffset: 0;
+    }
+}

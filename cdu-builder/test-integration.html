@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test - Editor Visual Integrado</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #visual-canvas {
+        border: 1px solid #ddd;
+        width: 100%;
+        height: 400px;
+        position: relative;
+        background: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>🧪 Test de Integración - Editor Visual</h1>
+      <p>
+        Este test verifica que el nodo de inicio se integre correctamente con el
+        sistema de validación.
+      </p>
+
+      <div class="status success">
+        <strong>✅ Problema Identificado:</strong> El nodo de inicio predefinido
+        se creaba fuera del NodeManager, causando fallos de validación.
+      </div>
+
+      <div class="status warning">
+        <strong>🔧 Solución Implementada:</strong> El nodo de inicio ahora se
+        crea usando VisualNodeManager.createNode('start').
+      </div>
+
+      <button onclick="testStartNodeIntegration()">
+        🧪 Probar Integración del Nodo Inicio
+      </button>
+      <button onclick="testValidation()">✅ Probar Validación</button>
+      <button onclick="clearTest()">🗑️ Limpiar Test</button>
+
+      <h3>Canvas del Editor:</h3>
+      <div id="visual-canvas"></div>
+
+      <h3>Log de Resultados:</h3>
+      <div id="test-results"></div>
+    </div>
+
+    <!-- Cargar todos los módulos necesarios -->
+    <script src="visual-editor/visual-config.js"></script>
+    <script src="visual-editor/visual-node-manager.js"></script>
+    <script src="visual-editor/visual-connection-manager.js"></script>
+    <script src="visual-editor/visual-flow-converter.js"></script>
+    <script src="visual-editor/visual-drag-drop.js"></script>
+    <script src="visual-editor/visual-properties-panel.js"></script>
+    <script src="visual-editor/visual-validation-panel.js"></script>
+    <script src="visual-editor/visual-editor.js"></script>
+
+    <script>
+      let testResults = document.getElementById("test-results");
+
+      function log(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `status ${type}`;
+        div.innerHTML = message;
+        testResults.appendChild(div);
+        testResults.scrollTop = testResults.scrollHeight;
+      }
+
+      function testStartNodeIntegration() {
+        log(
+          "🧪 <strong>Iniciando test de integración del nodo de inicio...</strong>"
+        );
+
+        try {
+          // Inicializar el editor
+          if (typeof window.VisualEditor !== "undefined") {
+            window.VisualEditor.init();
+            log("✅ Editor inicializado correctamente", "success");
+          } else {
+            log("❌ Error: VisualEditor no está disponible", "error");
+            return;
+          }
+
+          // Verificar que se creó el nodo de inicio
+          setTimeout(() => {
+            const nodes = window.VisualNodeManager.getAllNodes();
+            const startNode = nodes.find(
+              (n) =>
+                n.type === "start" || n.id === "start" || n.id.includes("start")
+            );
+
+            if (startNode) {
+              log(
+                `✅ <strong>Nodo de inicio encontrado:</strong> ID=${startNode.id}, Tipo=${startNode.type}`,
+                "success"
+              );
+
+              // Verificar que esté en el DOM
+              const domElement = document.getElementById(startNode.id);
+              if (domElement) {
+                log("✅ Nodo de inicio presente en el DOM", "success");
+              } else {
+                log("⚠️ Nodo de inicio no encontrado en el DOM", "warning");
+              }
+            } else {
+              log("❌ No se encontró nodo de inicio registrado", "error");
+            }
+
+            log(
+              `📊 <strong>Total de nodos registrados:</strong> ${nodes.length}`
+            );
+          }, 500);
+        } catch (error) {
+          log(
+            `❌ <strong>Error durante el test:</strong> ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      function testValidation() {
+        log("✅ <strong>Iniciando test de validación...</strong>");
+
+        try {
+          const nodes = window.VisualNodeManager.getAllNodes();
+          const connections =
+            window.VisualConnectionManager.getAllConnections();
+
+          log(
+            `📊 Validando flujo con ${nodes.length} nodos y ${connections.length} conexiones`
+          );
+
+          const result = window.VisualFlowConverter.validateFlow(
+            nodes,
+            connections
+          );
+
+          if (result.valid) {
+            log(
+              "✅ <strong>Validación exitosa!</strong> El nodo de inicio fue reconocido correctamente.",
+              "success"
+            );
+          } else {
+            log(
+              "⚠️ <strong>Errores de validación encontrados:</strong>",
+              "warning"
+            );
+            result.errors.forEach((error) => {
+              log(`• ${error}`, "warning");
+            });
+          }
+        } catch (error) {
+          log(
+            `❌ <strong>Error durante validación:</strong> ${error.message}`,
+            "error"
+          );
+        }
+      }
+
+      function clearTest() {
+        testResults.innerHTML = "";
+        const canvas = document.getElementById("visual-canvas");
+        canvas.innerHTML = "";
+        log("🗑️ Test limpiado. Canvas reiniciado.", "success");
+      }
+
+      // Inicialización automática al cargar la página
+      document.addEventListener("DOMContentLoaded", function () {
+        log(
+          "🚀 <strong>Test de integración cargado.</strong> Haz clic en los botones para probar.",
+          "success"
+        );
+      });
+    </script>
+  </body>
+</html>

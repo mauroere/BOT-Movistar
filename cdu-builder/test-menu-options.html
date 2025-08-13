@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍽️ Test - Nodos de Menú</title>
+    <link rel="stylesheet" href="visual-editor/visual-editor.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      .test-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .test-section {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .canvas-section {
+        flex: 2;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fafafa;
+      }
+      .properties-section {
+        flex: 1;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fafafa;
+      }
+      #visual-canvas {
+        width: 100%;
+        height: 400px;
+        position: relative;
+      }
+      #properties-panel {
+        width: 100%;
+        height: 400px;
+        padding: 10px;
+        overflow-y: auto;
+      }
+      .step-info {
+        background: #f8f9fa;
+        padding: 10px;
+        margin: 5px 0;
+        border-left: 4px solid #007bff;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>🍽️ Test de Nodos de Menú - Editor Visual</h1>
+      <p>
+        Este test específicamente prueba la funcionalidad de guardar y
+        visualizar opciones de menú.
+      </p>
+
+      <div class="status info">
+        <strong>🎯 Problema identificado:</strong>
+        Las opciones de la caja de menú no se guardan ni se visualizan
+        correctamente.
+      </div>
+
+      <div class="status success">
+        <strong>✅ Soluciones implementadas:</strong>
+        <ul style="margin: 5px 0">
+          <li>Eventos de array-input mejorados para capturar cambios</li>
+          <li>Visualización específica de opciones de menú en los nodos</li>
+          <li>Estilos CSS para mostrar opciones visualmente</li>
+          <li>Logging para debug de propiedades de array</li>
+        </ul>
+      </div>
+
+      <div style="margin: 15px 0">
+        <button onclick="initEditor()">🚀 Inicializar Editor</button>
+        <button onclick="createMenuNode()">🍽️ Crear Nodo de Menú</button>
+        <button onclick="testMenuOptions()">🧪 Test Opciones de Menú</button>
+        <button onclick="showNodeData()">📊 Ver Datos del Nodo</button>
+        <button onclick="clearCanvas()">🗑️ Limpiar</button>
+      </div>
+
+      <div class="test-section">
+        <div class="canvas-section">
+          <h3>Canvas del Editor</h3>
+          <div id="visual-canvas"></div>
+        </div>
+        <div class="properties-section">
+          <h3>Panel de Propiedades</h3>
+          <div id="properties-panel">
+            <div id="properties-content">
+              <p style="color: #666; text-align: center; padding: 20px">
+                Selecciona un nodo para ver sus propiedades
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>📊 Log de Pruebas:</h3>
+      <div id="test-results"></div>
+
+      <div class="status warning" style="margin-top: 20px">
+        <h4>🧪 Pasos de la prueba:</h4>
+        <div class="step-info">
+          <strong>Paso 1:</strong> Inicializar el editor y crear un nodo de menú
+        </div>
+        <div class="step-info">
+          <strong>Paso 2:</strong> Configurar el título del menú (ej: "Menú
+          Principal")
+        </div>
+        <div class="step-info">
+          <strong>Paso 3:</strong> Agregar opciones usando el botón "+ Agregar"
+        </div>
+        <div class="step-info">
+          <strong>Paso 4:</strong> Verificar que las opciones aparezcan en el
+          nodo visual
+        </div>
+        <div class="step-info">
+          <strong>Paso 5:</strong> Confirmar que los datos se guarden
+          correctamente
+        </div>
+      </div>
+    </div>
+
+    <!-- Cargar todos los módulos necesarios del editor visual -->
+    <script src="visual-editor/visual-config.js"></script>
+    <script src="visual-editor/visual-node-manager.js"></script>
+    <script src="visual-editor/visual-connection-manager.js"></script>
+    <script src="visual-editor/visual-flow-converter.js"></script>
+    <script src="visual-editor/visual-drag-drop.js"></script>
+    <script src="visual-editor/visual-properties-panel.js"></script>
+    <script src="visual-editor/visual-validation-panel.js"></script>
+    <script src="visual-editor/visual-editor.js"></script>
+
+    <script>
+      let testResults = document.getElementById("test-results");
+      let currentMenuNodeId = null;
+
+      function log(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `status ${type}`;
+        div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+        testResults.appendChild(div);
+        testResults.scrollTop = testResults.scrollHeight;
+      }
+
+      function initEditor() {
+        log("🚀 <strong>Inicializando Editor Visual...</strong>");
+
+        try {
+          if (typeof window.VisualEditor !== "undefined") {
+            window.VisualEditor.init();
+            log("✅ Editor inicializado correctamente", "success");
+
+            // Configurar el panel de propiedades
+            if (typeof window.VisualPropertiesPanel !== "undefined") {
+              window.VisualPropertiesPanel.init();
+              log("✅ Panel de propiedades inicializado", "success");
+            }
+          } else {
+            log("❌ Error: VisualEditor no está disponible", "error");
+          }
+        } catch (error) {
+          log(
+            `❌ <strong>Error durante la inicialización:</strong> ${error.message}`,
+            "error"
+          );
+          console.error("Error de inicialización:", error);
+        }
+      }
+
+      function createMenuNode() {
+        log("🍽️ <strong>Creando nodo de menú...</strong>");
+
+        try {
+          // Crear un nodo de tipo menú en el centro del canvas
+          const menuNode = window.VisualNodeManager.createNode("menu", {
+            x: 200,
+            y: 150,
+          });
+
+          if (menuNode) {
+            currentMenuNodeId = menuNode.id;
+            log(
+              `✅ <strong>Nodo de menú creado:</strong> ID=${menuNode.id}`,
+              "success"
+            );
+
+            // Seleccionar automáticamente el nodo para mostrar las propiedades
+            setTimeout(() => {
+              window.VisualNodeManager.selectNode(menuNode.id);
+              log(
+                "✅ Nodo seleccionado - panel de propiedades actualizado",
+                "success"
+              );
+            }, 100);
+          } else {
+            log("❌ Error al crear nodo de menú", "error");
+          }
+        } catch (error) {
+          log(
+            `❌ <strong>Error creando nodo de menú:</strong> ${error.message}`,
+            "error"
+          );
+          console.error("Error creando nodo:", error);
+        }
+      }
+
+      function testMenuOptions() {
+        log("🧪 <strong>Iniciando test de opciones de menú...</strong>");
+
+        if (!currentMenuNodeId) {
+          log("⚠️ Primero crea un nodo de menú", "warning");
+          return;
+        }
+
+        try {
+          const menuNode = window.VisualNodeManager.getNode(currentMenuNodeId);
+          if (!menuNode) {
+            log("❌ Nodo de menú no encontrado", "error");
+            return;
+          }
+
+          // Configurar propiedades de ejemplo
+          menuNode.properties.title = "Menú Principal";
+          menuNode.properties.text = "Selecciona una opción:";
+          menuNode.properties.options = [
+            "Ver mi saldo",
+            "Consultar facturas",
+            "Servicios técnicos",
+            "Hablar con un agente",
+          ];
+
+          // Actualizar la visualización
+          window.VisualNodeManager.updateNodeContent(currentMenuNodeId);
+
+          // Actualizar el panel de propiedades si el nodo está seleccionado
+          if (
+            window.VisualPropertiesPanel.currentNode &&
+            window.VisualPropertiesPanel.currentNode.id === currentMenuNodeId
+          ) {
+            window.VisualPropertiesPanel.updateProperties(menuNode);
+          }
+
+          log("✅ <strong>Opciones de menú configuradas:</strong>", "success");
+          menuNode.properties.options.forEach((option, index) => {
+            log(`&nbsp;&nbsp;&nbsp;${index + 1}. ${option}`, "info");
+          });
+
+          log(
+            "🔍 Verifica que las opciones aparezcan en el nodo visual",
+            "info"
+          );
+        } catch (error) {
+          log(
+            `❌ <strong>Error en test de opciones:</strong> ${error.message}`,
+            "error"
+          );
+          console.error("Error en test:", error);
+        }
+      }
+
+      function showNodeData() {
+        log("📊 <strong>Mostrando datos de todos los nodos...</strong>");
+
+        try {
+          const nodes = window.VisualNodeManager.getAllNodes();
+
+          if (nodes.length === 0) {
+            log("ℹ️ No hay nodos en el canvas", "info");
+            return;
+          }
+
+          log(`📊 <strong>Total de nodos:</strong> ${nodes.length}`, "info");
+
+          nodes.forEach((node) => {
+            log(`<strong>Nodo ${node.id}:</strong> Tipo=${node.type}`, "info");
+
+            if (node.properties) {
+              Object.entries(node.properties).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                  log(
+                    `&nbsp;&nbsp;&nbsp;${key}: [${
+                      value.length
+                    } elementos] = [${value.join(", ")}]`,
+                    "info"
+                  );
+                } else {
+                  log(`&nbsp;&nbsp;&nbsp;${key}: ${value}`, "info");
+                }
+              });
+            }
+          });
+        } catch (error) {
+          log(
+            `❌ <strong>Error mostrando datos:</strong> ${error.message}`,
+            "error"
+          );
+          console.error("Error mostrando datos:", error);
+        }
+      }
+
+      function clearCanvas() {
+        try {
+          const canvas = document.getElementById("visual-canvas");
+          if (canvas) {
+            canvas.innerHTML = "";
+          }
+
+          // Limpiar los datos del NodeManager si existe
+          if (window.VisualNodeManager && window.VisualNodeManager.nodes) {
+            window.VisualNodeManager.nodes.clear();
+          }
+
+          currentMenuNodeId = null;
+          testResults.innerHTML = "";
+
+          log("🗑️ Canvas limpiado correctamente", "success");
+        } catch (error) {
+          log(`❌ Error limpiando canvas: ${error.message}`, "error");
+        }
+      }
+
+      // Inicialización automática al cargar la página
+      document.addEventListener("DOMContentLoaded", function () {
+        log(
+          "🚀 <strong>Test de nodos de menú cargado.</strong> Listo para probar!",
+          "success"
+        );
+
+        // Configurar el contenedor de propiedades para que el panel funcione
+        const propertiesContainer =
+          document.getElementById("properties-content");
+        if (
+          propertiesContainer &&
+          !document.getElementById("properties-content")
+        ) {
+          // El contenedor ya existe con el ID correcto
+          console.log("Container de propiedades configurado correctamente");
+        }
+      });
+    </script>
+  </body>
+</html>

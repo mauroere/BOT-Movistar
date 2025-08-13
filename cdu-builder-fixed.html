@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 CDU Builder Pro - Generador y Previsualizador de Flujos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+            line-height: 1.6;
+        }
+        
+        .builder-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .builder-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        .builder-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        /* Estilos para pestañas */
+        .tabs-container {
+            margin-bottom: 30px;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: #64748b;
+        }
+        
+        .tab-btn:hover {
+            color: #475569;
+            background: #f1f5f9;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .builder-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .builder-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+        }
+        
+        .btn-secondary {
+            background: #a0aec0;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #718096;
+        }
+        
+        .options-container {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .option-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .option-item input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+        
+        .template-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        /* Preview styles */
+        .preview-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .chat-preview {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f0f2f5;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 500px;
+            position: relative;
+        }
+        
+        .chat-header-preview {
+            background: #25d366;
+            color: white;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            margin: -20px -20px 20px -20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .message-preview {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 10px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .message-preview:before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 15px;
+            border: 8px solid transparent;
+            border-right-color: white;
+        }
+        
+        .options-preview {
+            margin-top: 15px;
+        }
+        
+        .option-preview {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #bbdefb;
+        }
+        
+        .option-preview:hover {
+            background: #bbdefb;
+        }
+        
+        /* Deploy styles */
+        .deploy-section {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .deploy-status {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d1d5db;
+        }
+        
+        .deploy-status.ready {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #15803d;
+        }
+        
+        .deploy-status.deployed {
+            background: #dbeafe;
+            border-color: #2563eb;
+            color: #1d4ed8;
+        }
+        
+        .deploy-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        /* Validation styles */
+        .validation-errors {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #991b1b;
+        }
+        
+        .validation-errors ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .validation-success {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #166534;
+        }
+        
+        .code-output {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        @media (max-width: 768px) {
+            .builder-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .builder-header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="builder-header">
+        <h1>🔧 CDU Builder Pro</h1>
+        <p>Generador, Previsualizador y Desplegador Automático de Flujos - WhatsApp Bot Movistar Empresas</p>
+    </div>
+
+    <!-- Navegación por pestañas -->
+    <div class="tabs-container">
+        <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="config">⚙️ Configuración</button>
+            <button class="tab-btn" data-tab="preview">👁️ Previsualización</button>
+            <button class="tab-btn" data-tab="code">📄 Código</button>
+            <button class="tab-btn" data-tab="deploy">🚀 Despliegue</button>
+        </div>
+    </div>
+
+    <!-- TAB 1: Configuración -->
+    <div class="tab-content active" id="config-tab">
+        <div class="builder-container">
+            <!-- Configuración Básica -->
+            <div class="builder-section">
+                <h3 class="section-title">
+                    ⚙️ Configuración Básica
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del CDU (sin espacios) *:</label>
+                    <input type="text" id="cduName" class="form-input" placeholder="ej: soporte_tecnico" required>
+                    <small style="color: #666;">Solo letras, números y guiones bajos</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Título para mostrar *:</label>
+                    <input type="text" id="cduTitle" class="form-input" placeholder="ej: CDU Soporte Técnico" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Descripción breve *:</label>
+                    <input type="text" id="cduDescription" class="form-input" placeholder="ej: Asistencia técnica especializada" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Icono (Font Awesome):</label>
+                    <input type="text" id="cduIcon" class="form-input" placeholder="ej: fas fa-tools" value="fas fa-cog">
+                    <small style="color: #666;">Busca íconos en <a href="https://fontawesome.com/icons" target="_blank">FontAwesome</a></small>
+                </div>
+            </div>
+
+            <!-- Mensajes y Opciones -->
+            <div class="builder-section">
+                <h3 class="section-title">
+                    💬 Contenido del Flujo
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Mensaje inicial *:</label>
+                    <textarea id="initialMessage" class="form-input form-textarea" placeholder="¡Hola! Te ayudo con..." required></textarea>
+                    <small style="color: #666;">Este será el primer mensaje que vea el usuario</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mensaje adicional (opcional):</label>
+                    <textarea id="secondMessage" class="form-input form-textarea" placeholder="Selecciona una opción..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Opciones de respuesta *:</label>
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Las opciones se agregan dinámicamente -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addOption()">➕ Agregar Opción</button>
+                    <small style="color: #666;">Al menos una opción es requerida</small>
+                </div>
+            </div>
+
+            <!-- Plantillas Rápidas -->
+            <div class="builder-section">
+                <h3 class="section-title">
+                    📋 Plantillas Rápidas
+                </h3>
+                
+                <div class="template-buttons">
+                    <button class="btn btn-primary" onclick="loadTemplate('soporte')">🔧 Soporte Técnico</button>
+                    <button class="btn btn-primary" onclick="loadTemplate('facturacion')">💰 Facturación</button>
+                    <button class="btn btn-primary" onclick="loadTemplate('comercial')">🛍️ Comercial</button>
+                    <button class="btn btn-primary" onclick="loadTemplate('reclamos')">📞 Reclamos</button>
+                </div>
+            </div>
+
+            <!-- Configuración Avanzada -->
+            <div class="builder-section">
+                <h3 class="section-title">
+                    🎛️ Configuración Avanzada
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Autor:</label>
+                    <input type="text" id="author" class="form-input" placeholder="Tu nombre" value="CDU Builder Pro">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Versión:</label>
+                    <input type="text" id="version" class="form-input" placeholder="1.0" value="1.0">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableStats"> Habilitar estadísticas de uso
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableLogging" checked> Habilitar logging de debug
+                    </label>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="validateAndPreview()">👁️ Previsualizar</button>
+                    <button class="btn btn-success" onclick="validateAndGenerate()">📄 Generar Código</button>
+                    <button class="btn btn-secondary" onclick="clearAll()">🗑️ Limpiar Todo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: Previsualización -->
+    <div class="tab-content" id="preview-tab">
+        <div class="preview-container">
+            <h3 class="section-title">👁️ Previsualización del Flujo</h3>
+            
+            <div id="validationErrors" class="validation-errors" style="display: none;">
+                <strong>❌ Errores de validación:</strong>
+                <ul id="errorsList"></ul>
+            </div>
+            
+            <div id="validationSuccess" class="validation-success" style="display: none;">
+                <strong>✅ CDU validado correctamente</strong>
+            </div>
+            
+            <div class="chat-preview" id="chatPreview">
+                <div class="chat-header-preview">
+                    <i class="fas fa-robot"></i> Movistar Empresas Bot
+                </div>
+                <div id="previewContent">
+                    <p style="text-align: center; color: #666; margin-top: 100px;">
+                        Completa la configuración y presiona "Previsualizar" para ver cómo se verá tu CDU
+                    </p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="showTab('config')">⬅️ Editar</button>
+                <button class="btn btn-success" onclick="showTab('code')">📄 Ver Código</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: Código Generado -->
+    <div class="tab-content" id="code-tab">
+        <div class="builder-section">
+            <h3 class="section-title">
+                📄 Código Generado
+            </h3>
+            
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-primary" onclick="validateAndGenerate()">🔄 Regenerar Código</button>
+                <button class="btn btn-success" onclick="downloadCode()">💾 Descargar Archivo</button>
+                <button class="btn btn-secondary" onclick="copyCode()">📋 Copiar</button>
+                <button class="btn btn-primary" onclick="showTab('deploy')">🚀 Ir a Despliegue</button>
+            </div>
+            
+            <div id="statusMessage"></div>
+            <div class="code-output" id="codeOutput">Genera el código para ver el resultado aquí...</div>
+        </div>
+    </div>
+
+    <!-- TAB 4: Despliegue -->
+    <div class="tab-content" id="deploy-tab">
+        <div class="deploy-section">
+            <h3 class="section-title">🚀 Despliegue en el Emulador</h3>
+            
+            <div class="deploy-status" id="deployStatus">
+                <i class="fas fa-info-circle"></i>
+                <p>Genera y valida tu CDU para poder desplegarlo</p>
+            </div>
+            
+            <div class="deploy-actions" id="deployActions">
+                <button class="btn btn-success" id="testDeployBtn" onclick="testDeploy()" style="display: none;">
+                    🧪 Prueba en Temporal
+                </button>
+                <button class="btn btn-primary" id="fullDeployBtn" onclick="fullDeploy()" style="display: none;">
+                    🚀 Desplegar Definitivo
+                </button>
+                <button class="btn btn-secondary" onclick="showTab('code')">⬅️ Volver al Código</button>
+            </div>
+            
+            <div id="deployResults" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global de la aplicación
+        const AppState = {
+            currentCDU: null,
+            isValid: false,
+            generatedCode: null,
+            isDeployed: false
+        };
+
+        // Plantillas predefinidas
+        const templates = {
+            soporte: {
+                name: 'soporte_tecnico',
+                title: 'CDU Soporte Técnico', 
+                description: 'Asistencia técnica especializada',
+                icon: 'fas fa-tools',
+                initialMessage: '🔧 ¡Hola! Soy tu asistente de soporte técnico de Movistar Empresas.\\n\\n¿En qué puedo ayudarte hoy?',
+                secondMessage: 'Selecciona el tipo de problema que estás experimentando:',
+                options: [
+                    { text: 'Problemas de conexión a Internet', action: 'soporte_conexion' },
+                    { text: 'Configuración de equipos', action: 'soporte_equipos' },
+                    { text: 'Problemas con líneas telefónicas', action: 'soporte_lineas' },
+                    { text: 'Consultas técnicas avanzadas', action: 'soporte_avanzado' },
+                    { text: 'Hablar con técnico especializado', action: 'transfer_tecnico' },
+                    { text: '🔙 Volver al menú principal', action: 'welcome' }
+                ]
+            },
+            facturacion: {
+                name: 'consultas_facturacion',
+                title: 'CDU Consultas Facturación',
+                description: 'Consultas sobre facturación y pagos',
+                icon: 'fas fa-file-invoice-dollar',
+                initialMessage: '💰 ¡Hola! Te ayudo con todas tus consultas de facturación y pagos.',
+                secondMessage: '¿Qué necesitas hacer hoy?',
+                options: [
+                    { text: 'Ver mi última factura', action: 'ver_ultima_factura' },
+                    { text: 'Descargar facturas anteriores', action: 'descargar_facturas' },
+                    { text: 'Consultar estado de pagos', action: 'estado_pagos' },
+                    { text: 'Reportar problema de cobro', action: 'reclamo_cobro' },
+                    { text: 'Configurar débito automático', action: 'config_debito' },
+                    { text: '🔙 Volver al menú principal', action: 'welcome' }
+                ]
+            },
+            comercial: {
+                name: 'atencion_comercial',
+                title: 'CDU Atención Comercial',
+                description: 'Servicios, ofertas y upgrades',
+                icon: 'fas fa-handshake',
+                initialMessage: '🛍️ ¡Hola! Soy tu asesor comercial virtual de Movistar Empresas.',
+                secondMessage: 'Te ayudo a encontrar las mejores soluciones para tu empresa:',
+                options: [
+                    { text: 'Nuevos servicios de Internet', action: 'servicios_internet' },
+                    { text: 'Planes móviles empresariales', action: 'planes_moviles' },
+                    { text: 'Soluciones de telefonía fija', action: 'telefonia_fija' },
+                    { text: 'Upgrades de plan actual', action: 'upgrade_plan' },
+                    { text: 'Ofertas y promociones vigentes', action: 'ofertas_actuales' },
+                    { text: 'Hablar con asesor comercial', action: 'transfer_comercial' },
+                    { text: '🔙 Volver al menú principal', action: 'welcome' }
+                ]
+            },
+            reclamos: {
+                name: 'gestion_reclamos',
+                title: 'CDU Gestión de Reclamos',
+                description: 'Gestión y seguimiento de reclamos',
+                icon: 'fas fa-exclamation-triangle',
+                initialMessage: '📞 ¡Hola! Lamento que hayas tenido inconvenientes.\\n\\nEstoy aquí para ayudarte a resolver tu situación.',
+                secondMessage: '¿Qué tipo de reclamo necesitas hacer?',
+                options: [
+                    { text: 'Reclamo por facturación incorrecta', action: 'reclamo_facturacion' },
+                    { text: 'Falla o interrupción de servicio', action: 'reclamo_servicio' },
+                    { text: 'Problema con atención recibida', action: 'reclamo_atencion' },
+                    { text: 'Demora en instalación/reparación', action: 'reclamo_demora' },
+                    { text: 'Seguimiento de reclamo existente', action: 'seguimiento_reclamo' },
+                    { text: 'Escalamiento a supervisor', action: 'escalamiento' },
+                    { text: '🔙 Volver al menú principal', action: 'welcome' }
+                ]
+            }
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTabNavigation();
+            addOption(); // Agregar una opción por defecto
+            showStatus('CDU Builder Pro cargado correctamente', 'success');
+        });
+
+        // Navegación por pestañas
+        function setupTabNavigation() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            tabBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const targetTab = btn.getAttribute('data-tab');
+                    showTab(targetTab);
+                });
+            });
+        }
+
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar la pestaña seleccionada
+            const targetTab = document.getElementById(tabName + '-tab');
+            const targetBtn = document.querySelector('[data-tab="' + tabName + '"]');
+            
+            if (targetTab && targetBtn) {
+                targetTab.classList.add('active');
+                targetBtn.classList.add('active');
+            }
+        }
+
+        // Gestión de opciones
+        function addOption() {
+            const container = document.getElementById('optionsContainer');
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            optionDiv.innerHTML = '<input type="text" placeholder="Texto de la opción" class="option-text" required>' +
+                                '<input type="text" placeholder="Acción (ej: siguiente_paso)" class="option-action" required>' +
+                                '<button type="button" class="btn btn-secondary" onclick="removeOption(this)">❌</button>';
+            container.appendChild(optionDiv);
+        }
+
+        function removeOption(button) {
+            const optionItems = document.querySelectorAll('.option-item');
+            if (optionItems.length > 1) {
+                button.parentElement.remove();
+            } else {
+                showStatus('Debe haber al menos una opción', 'error');
+            }
+        }
+
+        // Carga de plantillas
+        function loadTemplate(templateName) {
+            const template = templates[templateName];
+            if (!template) {
+                showStatus('Plantilla no encontrada', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('cduName').value = template.name;
+                document.getElementById('cduTitle').value = template.title;
+                document.getElementById('cduDescription').value = template.description;
+                document.getElementById('cduIcon').value = template.icon;
+                document.getElementById('initialMessage').value = template.initialMessage.replace(/\\\\n/g, '\\n');
+                document.getElementById('secondMessage').value = template.secondMessage || '';
+
+                // Limpiar opciones actuales
+                const container = document.getElementById('optionsContainer');
+                container.innerHTML = '';
+
+                // Agregar opciones de la plantilla
+                template.options.forEach(function(option) {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option-item';
+                    optionDiv.innerHTML = '<input type="text" placeholder="Texto de la opción" class="option-text" value="' + option.text + '" required>' +
+                                        '<input type="text" placeholder="Acción (ej: siguiente_paso)" class="option-action" value="' + option.action + '" required>' +
+                                        '<button type="button" class="btn btn-secondary" onclick="removeOption(this)">❌</button>';
+                    container.appendChild(optionDiv);
+                });
+
+                AppState.currentCDU = collectFormData();
+                showStatus('Plantilla "' + template.title + '" cargada correctamente', 'success');
+                
+            } catch (error) {
+                showStatus('Error cargando plantilla: ' + error.message, 'error');
+            }
+        }
+
+        // Validación
+        function validateCDU() {
+            const errors = [];
+            const data = collectFormData();
+
+            // Validaciones obligatorias
+            if (!data.cduName) errors.push('El nombre del CDU es obligatorio');
+            if (!data.cduTitle) errors.push('El título es obligatorio');
+            if (!data.cduDescription) errors.push('La descripción es obligatoria');
+            if (!data.initialMessage) errors.push('El mensaje inicial es obligatorio');
+            if (data.options.length === 0) errors.push('Debe haber al menos una opción');
+
+            // Validaciones de formato
+            if (data.cduName && !/^[a-z0-9_]+$/.test(data.cduName)) {
+                errors.push('El nombre del CDU solo puede contener letras minúsculas, números y guiones bajos');
+            }
+
+            if (data.cduName && data.cduName.length > 50) {
+                errors.push('El nombre del CDU no puede tener más de 50 caracteres');
+            }
+
+            // Validar opciones
+            data.options.forEach(function(option, index) {
+                if (!option.text) errors.push('La opción ' + (index + 1) + ' debe tener texto');
+                if (!option.action) errors.push('La opción ' + (index + 1) + ' debe tener una acción');
+                if (option.action && !/^[a-z0-9_]+$/.test(option.action)) {
+                    errors.push('La acción de la opción ' + (index + 1) + ' solo puede contener letras minúsculas, números y guiones bajos');
+                }
+            });
+
+            return {
+                isValid: errors.length === 0,
+                errors: errors,
+                data: data
+            };
+        }
+
+        function collectFormData() {
+            const options = [];
+            const optionItems = document.querySelectorAll('.option-item');
+            
+            optionItems.forEach(function(item) {
+                const text = item.querySelector('.option-text').value.trim();
+                const action = item.querySelector('.option-action').value.trim();
+                
+                if (text && action) {
+                    options.push({ text: text, action: action });
+                }
+            });
+
+            return {
+                cduName: document.getElementById('cduName').value.trim(),
+                cduTitle: document.getElementById('cduTitle').value.trim(),
+                cduDescription: document.getElementById('cduDescription').value.trim(),
+                cduIcon: document.getElementById('cduIcon').value.trim() || 'fas fa-cog',
+                initialMessage: document.getElementById('initialMessage').value.trim(),
+                secondMessage: document.getElementById('secondMessage').value.trim(),
+                options: options,
+                author: document.getElementById('author').value.trim() || 'CDU Builder Pro',
+                version: document.getElementById('version').value.trim() || '1.0',
+                enableStats: document.getElementById('enableStats').checked,
+                enableLogging: document.getElementById('enableLogging').checked
+            };
+        }
+
+        // Previsualización
+        function validateAndPreview() {
+            const validation = validateCDU();
+            
+            if (!validation.isValid) {
+                showValidationErrors(validation.errors);
+                showTab('preview');
+                return;
+            }
+
+            hideValidationErrors();
+            showValidationSuccess();
+            renderPreview(validation.data);
+            AppState.currentCDU = validation.data;
+            AppState.isValid = true;
+            showTab('preview');
+        }
+
+        function showValidationErrors(errors) {
+            const errorsContainer = document.getElementById('validationErrors');
+            const errorsList = document.getElementById('errorsList');
+            const successContainer = document.getElementById('validationSuccess');
+            
+            errorsList.innerHTML = errors.map(function(error) { return '<li>' + error + '</li>'; }).join('');
+            errorsContainer.style.display = 'block';
+            successContainer.style.display = 'none';
+        }
+
+        function hideValidationErrors() {
+            document.getElementById('validationErrors').style.display = 'none';
+        }
+
+        function showValidationSuccess() {
+            document.getElementById('validationSuccess').style.display = 'block';
+        }
+
+        function renderPreview(data) {
+            const previewContent = document.getElementById('previewContent');
+            
+            let messagesHTML = '';
+            if (data.initialMessage) {
+                messagesHTML += '<div class="message-preview">' + data.initialMessage.replace(/\\n/g, '<br>') + '</div>';
+            }
+            if (data.secondMessage) {
+                messagesHTML += '<div class="message-preview">' + data.secondMessage.replace(/\\n/g, '<br>') + '</div>';
+            }
+
+            let optionsHTML = '<div class="options-preview">';
+            data.options.forEach(function(option) {
+                optionsHTML += '<div class="option-preview" onclick="previewOptionClick(\'' + option.action + '\')">' + option.text + '</div>';
+            });
+            optionsHTML += '</div>';
+
+            previewContent.innerHTML = messagesHTML + optionsHTML;
+        }
+
+        function previewOptionClick(action) {
+            showStatus('Opción seleccionada: ' + action, 'success');
+        }
+
+        // Generación de código
+        function validateAndGenerate() {
+            const validation = validateCDU();
+            
+            if (!validation.isValid) {
+                showValidationErrors(validation.errors);
+                showTab('preview');
+                return;
+            }
+
+            try {
+                const code = generateCDUCode(validation.data);
+                document.getElementById('codeOutput').textContent = code;
+                AppState.generatedCode = code;
+                AppState.currentCDU = validation.data;
+                AppState.isValid = true;
+                
+                updateDeployStatus();
+                showStatus('CDU "' + validation.data.cduName + '" generado correctamente', 'success');
+                
+            } catch (error) {
+                showStatus('Error al generar código: ' + error.message, 'error');
+            }
+        }
+
+        function generateCDUCode(config) {
+            const date = new Date().toLocaleDateString('es-ES');
+            const messages = [config.initialMessage.replace(/\\n/g, '\\\\n')];
+            if (config.secondMessage) messages.push(config.secondMessage.replace(/\\n/g, '\\\\n'));
+
+            return '// ========================================\n' +
+                   '// ' + config.cduTitle.toUpperCase() + '\n' +
+                   '// ========================================\n' +
+                   '// Autor: ' + config.author + '\n' +
+                   '// Fecha: ' + date + '\n' +
+                   '// Versión: ' + config.version + '\n' +
+                   '// Descripción: ' + config.cduDescription + '\n' +
+                   '// Generado con: CDU Builder Pro\n' +
+                   '// ========================================\n\n' +
+                   (config.enableLogging ? 'console.log(\'📦 Cargando ' + config.cduTitle + '...\');\n\n' : '') +
+                   '// Configuración del CDU\n' +
+                   'const CDU_' + config.cduName.toUpperCase() + '_CONFIG = {\n' +
+                   '  name: \'' + config.cduName + '\',\n' +
+                   '  title: \'' + config.cduTitle + '\',\n' +
+                   '  description: \'' + config.cduDescription + '\',\n' +
+                   '  icon: \'' + config.cduIcon + '\',\n' +
+                   '  version: \'' + config.version + '\',\n' +
+                   '  author: \'' + config.author + '\',\n' +
+                   '  enabled: true,\n' +
+                   '  ' + (config.enableStats ? 'trackStats: true,' : 'trackStats: false,') + '\n' +
+                   '  ' + (config.enableLogging ? 'enableLogging: true' : 'enableLogging: false') + '\n' +
+                   '};\n\n' +
+                   '// Definición del flujo principal\n' +
+                   'const FLUJO_' + config.cduName.toUpperCase() + ' = {\n' +
+                   '  // Paso inicial\n' +
+                   '  ' + config.cduName + ': {\n' +
+                   '    messages: [\n' +
+                   messages.map(function(msg) { return '      "' + msg + '"'; }).join(',\n') + '\n' +
+                   '    ],\n' +
+                   '    options: [\n' +
+                   config.options.map(function(opt) { return '      { text: "' + opt.text.replace(/"/g, '\\"') + '", action: "' + opt.action + '" }'; }).join(',\n') + '\n' +
+                   '    ]\n' +
+                   '  }\n' +
+                   '};\n\n' +
+                   '// Función de inicialización del CDU\n' +
+                   'function init' + formatFunctionName(config.cduName) + 'CDU() {\n' +
+                   (config.enableLogging ? '  console.log(\'🚀 Inicializando ' + config.cduTitle + '...\');\n\n' : '') +
+                   '  if (typeof window === \'undefined\' || !window.bot) {\n' +
+                   '    console.error(\'❌ Bot principal no encontrado.\');\n' +
+                   '    return false;\n' +
+                   '  }\n\n' +
+                   '  try {\n' +
+                   '    Object.keys(FLUJO_' + config.cduName.toUpperCase() + ').forEach(function(stepName) {\n' +
+                   '      window.bot.addFlow(stepName, FLUJO_' + config.cduName.toUpperCase() + '[stepName]);\n' +
+                   (config.enableLogging ? '      console.log(\'📝 Paso "\' + stepName + \'" registrado\');\n' : '') +
+                   '    });\n\n' +
+                   (config.enableStats ? '    if (window.bot.statsManager) {\n' +
+                                        '      window.bot.statsManager.registerCDU(\'' + config.cduName + '\', \'' + config.cduTitle + '\');\n' +
+                                        '    }\n\n' : '') +
+                   (config.enableLogging ? '    console.log(\'✅ ' + config.cduTitle + ' cargado correctamente\');\n' : '') +
+                   '    return true;\n' +
+                   '  } catch (error) {\n' +
+                   '    console.error(\'❌ Error inicializando ' + config.cduTitle + ':\', error);\n' +
+                   '    return false;\n' +
+                   '  }\n' +
+                   '}\n\n' +
+                   '// Auto-inicialización\n' +
+                   'document.addEventListener(\'DOMContentLoaded\', function() {\n' +
+                   '  var attempts = 0;\n' +
+                   '  var maxAttempts = 50;\n' +
+                   '  \n' +
+                   '  var initInterval = setInterval(function() {\n' +
+                   '    attempts++;\n' +
+                   '    \n' +
+                   '    if (typeof window !== \'undefined\' && window.bot) {\n' +
+                   '      clearInterval(initInterval);\n' +
+                   '      var success = init' + formatFunctionName(config.cduName) + 'CDU();\n' +
+                   (config.enableLogging ? '      if (success) {\n' +
+                                          '        console.log(\'🎯 ' + config.cduTitle + ' integrado al sistema\');\n' +
+                                          '      }\n' : '') +
+                   '    } else if (attempts >= maxAttempts) {\n' +
+                   '      clearInterval(initInterval);\n' +
+                   '      console.error(\'❌ Timeout: No se pudo conectar con el bot principal\');\n' +
+                   '    }\n' +
+                   '  }, 100);\n' +
+                   '});\n\n' +
+                   (config.enableLogging ? 'console.log(\'📦 ' + config.cduTitle + ' definido y listo para usar\');\n\n' : '') +
+                   '// ========================================\n' +
+                   '// INSTRUCCIONES DE INSTALACION:\n' +
+                   '// ========================================\n' +
+                   '// 1. Guarda este archivo como "cdu-' + config.cduName + '.js" en la carpeta /flujos/\n' +
+                   '// 2. Agrega la referencia en index.html:\n' +
+                   '//    <script src="flujos/cdu-' + config.cduName + '.js"></script>\n' +
+                   '// 3. Agrega el boton en el HTML del selector CDU:\n' +
+                   '//    <button class="cdu-btn" data-cdu="' + config.cduName + '">\n' +
+                   '//      <i class="' + config.cduIcon + '"></i>\n' +
+                   '//      <span>' + config.cduTitle + '</span>\n' +
+                   '//      <small>' + config.cduDescription + '</small>\n' +
+                   '//    </button>\n' +
+                   '// 4. Listo! El CDU estara disponible en la interfaz\n' +
+                   '// ========================================';
+        }
+
+        function formatFunctionName(cduName) {
+            return cduName.split('_').map(function(word) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join('');
+        }
+
+        // Funciones de archivo
+        function downloadCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            
+            if (!AppState.generatedCode || code === 'Genera el código para ver el resultado aquí...') {
+                showStatus('Primero genera el código antes de descargarlo', 'error');
+                return;
+            }
+            
+            const cduName = AppState.currentCDU ? AppState.currentCDU.cduName : 'mi_cdu';
+            
+            try {
+                const blob = new Blob([code], { type: 'text/javascript' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'cdu-' + cduName + '.js';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('Archivo descargado correctamente', 'success');
+            } catch (error) {
+                showStatus('Error al descargar: ' + error.message, 'error');
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            
+            if (!AppState.generatedCode) {
+                showStatus('Primero genera el código antes de copiarlo', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(code).then(function() {
+                showStatus('Código copiado al portapapeles', 'success');
+            }).catch(function() {
+                showStatus('Error al copiar código', 'error');
+            });
+        }
+
+        // Sistema de despliegue
+        function updateDeployStatus() {
+            const deployStatus = document.getElementById('deployStatus');
+            const testBtn = document.getElementById('testDeployBtn');
+            const fullBtn = document.getElementById('fullDeployBtn');
+            
+            if (AppState.isValid && AppState.generatedCode) {
+                deployStatus.className = 'deploy-status ready';
+                deployStatus.innerHTML = '<i class="fas fa-check-circle"></i>' +
+                                        '<p><strong>CDU listo para despliegue</strong></p>' +
+                                        '<p>CDU: <strong>' + AppState.currentCDU.cduTitle + '</strong></p>' +
+                                        '<p>Nombre: <code>' + AppState.currentCDU.cduName + '</code></p>';
+                testBtn.style.display = 'inline-flex';
+                fullBtn.style.display = 'inline-flex';
+            }
+        }
+
+        function testDeploy() {
+            if (!AppState.isValid || !AppState.generatedCode) {
+                showStatus('CDU no válido para despliegue', 'error');
+                return;
+            }
+
+            try {
+                if (window.opener && window.opener.bot) {
+                    const tempFlow = createFlowFromCDU(AppState.currentCDU);
+                    window.opener.bot.addFlow(AppState.currentCDU.cduName, tempFlow);
+                    
+                    if (window.opener.bot.cduSelector) {
+                        window.opener.bot.cduSelector.updateCDUList();
+                    }
+                    
+                    showDeployResult('success', '🧪 CDU desplegado temporalmente en el emulador', 
+                        'El CDU está ahora disponible para pruebas. Se eliminará al recargar la página.');
+                    
+                } else {
+                    showDeployResult('error', '❌ Emulador no encontrado', 
+                        'Abre esta herramienta desde la ventana del emulador principal.');
+                }
+                
+            } catch (error) {
+                showDeployResult('error', '❌ Error en despliegue temporal', error.message);
+            }
+        }
+
+        function fullDeploy() {
+            if (!AppState.isValid || !AppState.generatedCode) {
+                showStatus('CDU no válido para despliegue', 'error');
+                return;
+            }
+
+            const instructions = generateInstallationInstructions();
+            showDeployResult('info', '📋 Instrucciones de instalación', instructions);
+        }
+
+        function createFlowFromCDU(cdu) {
+            const messages = [cdu.initialMessage];
+            if (cdu.secondMessage) messages.push(cdu.secondMessage);
+            
+            return {
+                messages: messages,
+                options: cdu.options
+            };
+        }
+
+        function generateInstallationInstructions() {
+            const cdu = AppState.currentCDU;
+            return '<div style="text-align: left; max-width: 600px;">' +
+                   '<h4>Para instalar permanentemente tu CDU:</h4>' +
+                   '<ol>' +
+                   '<li><strong>Descargar:</strong> Usa el boton "Descargar Archivo" para obtener <code>cdu-' + cdu.cduName + '.js</code></li>' +
+                   '<li><strong>Guardar:</strong> Coloca el archivo en la carpeta <code>/flujos/</code></li>' +
+                   '<li><strong>HTML:</strong> Agrega en <code>index.html</code> antes del <code>&lt;/body&gt;</code>:' +
+                   '<pre style="background: #f4f4f4; padding: 10px; margin: 10px 0; border-radius: 5px; overflow-x: auto;">&lt;script src="flujos/cdu-' + cdu.cduName + '.js"&gt;&lt;/script&gt;</pre>' +
+                   '</li>' +
+                   '<li><strong>Boton:</strong> Agrega en el selector CDU:' +
+                   '<pre style="background: #f4f4f4; padding: 10px; margin: 10px 0; border-radius: 5px; overflow-x: auto;">&lt;button class="cdu-btn" data-cdu="' + cdu.cduName + '"&gt;\n  &lt;i class="' + cdu.cduIcon + '"&gt;&lt;/i&gt;\n  &lt;span&gt;' + cdu.cduTitle + '&lt;/span&gt;\n  &lt;small&gt;' + cdu.cduDescription + '&lt;/small&gt;\n&lt;/button&gt;</pre>' +
+                   '</li>' +
+                   '<li><strong>Listo!</strong> Recarga el emulador y tu CDU estara disponible</li>' +
+                   '</ol>' +
+                   '</div>';
+        }
+
+        function showDeployResult(type, title, message) {
+            const deployResults = document.getElementById('deployResults');
+            const className = type === 'success' ? 'status-success' : 
+                             type === 'error' ? 'status-error' : 'status-message';
+            
+            deployResults.innerHTML = '<div class="' + className + '">' +
+                                    '<strong>' + title + '</strong>' +
+                                    '<div style="margin-top: 10px;">' + message + '</div>' +
+                                    '</div>';
+
+            if (type === 'success') {
+                AppState.isDeployed = true;
+                const deployStatus = document.getElementById('deployStatus');
+                deployStatus.className = 'deploy-status deployed';
+                deployStatus.innerHTML = '<i class="fas fa-rocket"></i>' +
+                                        '<p><strong>CDU desplegado exitosamente</strong></p>' +
+                                        '<p>Ya esta disponible para usar!</p>';
+            }
+        }
+
+        // Utilidades
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            if (!statusDiv) return;
+            
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-message status-' + type;
+            
+            setTimeout(function() {
+                statusDiv.textContent = '';
+                statusDiv.className = '';
+            }, 5000);
+        }
+
+        function clearAll() {
+            if (confirm('¿Estás seguro de que queres limpiar todos los campos?')) {
+                document.querySelectorAll('input, textarea, select').forEach(function(element) {
+                    if (element.type === 'checkbox') {
+                        element.checked = element.id === 'enableLogging';
+                    } else {
+                        element.value = '';
+                    }
+                });
+                
+                // Resetear valores por defecto
+                document.getElementById('cduIcon').value = 'fas fa-cog';
+                document.getElementById('author').value = 'CDU Builder Pro';
+                document.getElementById('version').value = '1.0';
+                
+                // Limpiar opciones
+                const container = document.getElementById('optionsContainer');
+                container.innerHTML = '';
+                addOption();
+                
+                document.getElementById('codeOutput').textContent = 'Genera el código para ver el resultado aquí...';
+                document.getElementById('previewContent').innerHTML = '<p style="text-align: center; color: #666; margin-top: 100px;">Completa la configuracion y presiona "Previsualizar" para ver como se vera tu CDU</p>';
+                
+                // Resetear estado
+                AppState.currentCDU = null;
+                AppState.isValid = false;
+                AppState.generatedCode = null;
+                AppState.isDeployed = false;
+                
+                showTab('config');
+                showStatus('Formulario limpiado correctamente', 'success');
+            }
+        }
+    </script>
+</body>
+</html>

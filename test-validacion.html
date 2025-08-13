@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Validación - CDU Builder</title>
+    <link rel="stylesheet" href="cdu-builder/visual-editor/visual-editor.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+      }
+
+      .test-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .test-actions {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+      .btn-warning {
+        background: #ffc107;
+        color: #212529;
+      }
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-header">
+      <h1>🧪 Test de Validación - CDU Builder</h1>
+      <p>Prueba el sistema de validación y auto-corrección</p>
+    </div>
+
+    <div class="test-actions">
+      <h3 style="width: 100%; margin: 0 0 15px 0">🛠️ Acciones de Prueba:</h3>
+
+      <button class="btn btn-primary" onclick="addStartNode()">
+        🚀 Agregar Nodo Inicio
+      </button>
+      <button class="btn btn-success" onclick="addMessageNode()">
+        📝 Agregar Mensaje
+      </button>
+      <button class="btn btn-warning" onclick="addAudioNode()">
+        🔊 Agregar Audio (Sin URL)
+      </button>
+      <button class="btn btn-danger" onclick="validateFlow()">
+        ⚠️ Validar Flujo
+      </button>
+      <button class="btn btn-secondary" onclick="clearCanvas()">
+        🗑️ Limpiar Todo
+      </button>
+    </div>
+
+    <div id="visual-editor">
+      <div class="visual-editor-workspace">
+        <div class="components-panel">
+          <h4>📦 Componentes</h4>
+          <div class="component-list">
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="start"
+            >
+              <div class="component-icon">🚀</div>
+              <div class="component-label">Inicio</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="send-message"
+            >
+              <div class="component-icon">📝</div>
+              <div class="component-label">Mensaje</div>
+            </div>
+            <div
+              class="component-item"
+              draggable="true"
+              data-component-type="send-audio"
+            >
+              <div class="component-icon">🔊</div>
+              <div class="component-label">Audio</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="visual-canvas-container">
+          <svg id="connections-svg" class="connections-layer">
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+              </marker>
+            </defs>
+          </svg>
+          <div id="visual-canvas" class="visual-canvas">
+            <div class="canvas-placeholder">
+              <div class="placeholder-icon">🎯</div>
+              <div class="placeholder-text">
+                Arrastra componentes para probar la validación
+              </div>
+              <div class="placeholder-instruction">
+                Luego haz clic en "⚠️ Validar Flujo" para ver los errores
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="properties-panel">
+          <h4>⚙️ Propiedades</h4>
+          <div id="node-properties">
+            <p class="no-selection">Selecciona un componente para editarlo</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual-editor-toolbar" style="order: -1">
+        <div class="toolbar-section">
+          <h3>🧪 Test de Validación</h3>
+        </div>
+        <div class="toolbar-controls">
+          <button id="test-validate" class="btn btn-warning">⚠️ Validar</button>
+          <button id="test-autofix" class="btn btn-success">
+            🔧 Auto-corregir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts del editor visual -->
+    <script src="cdu-builder/visual-editor/visual-editor-config.js"></script>
+    <script src="cdu-builder/visual-editor/visual-components-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-node-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-connection-manager.js"></script>
+    <script src="cdu-builder/visual-editor/visual-properties-panel.js"></script>
+    <script src="cdu-builder/visual-editor/visual-flow-converter.js"></script>
+    <script src="cdu-builder/visual-editor/visual-editor.js"></script>
+
+    <script>
+      // Funciones de prueba
+      function addStartNode() {
+        if (window.VisualNodeManager) {
+          window.VisualNodeManager.createNode("start", { x: 100, y: 100 });
+          console.log("✅ Nodo de inicio agregado");
+        }
+      }
+
+      function addMessageNode() {
+        if (window.VisualNodeManager) {
+          const node = window.VisualNodeManager.createNode("send-message", {
+            x: 300,
+            y: 100,
+          });
+          // Dejar el texto vacío para probar validación
+          console.log("✅ Nodo de mensaje agregado (sin texto)", node.id);
+        }
+      }
+
+      function addAudioNode() {
+        if (window.VisualNodeManager) {
+          const node = window.VisualNodeManager.createNode("send-audio", {
+            x: 300,
+            y: 200,
+          });
+          // Dejar la URL vacía para probar validación
+          console.log("✅ Nodo de audio agregado (sin URL)", node.id);
+        }
+      }
+
+      function validateFlow() {
+        if (window.VisualEditor) {
+          window.VisualEditor.validateFlow();
+        }
+      }
+
+      function clearCanvas() {
+        if (window.VisualEditor) {
+          window.VisualEditor.clearCanvas();
+        }
+      }
+
+      // Inicializar sistema
+      window.addEventListener("load", () => {
+        console.log("🚀 Inicializando test de validación...");
+
+        if (window.VisualEditor) {
+          window.VisualEditor.init();
+          console.log("✅ Editor visual inicializado");
+
+          // Bindear botones de test
+          document
+            .getElementById("test-validate")
+            .addEventListener("click", validateFlow);
+          document
+            .getElementById("test-autofix")
+            .addEventListener("click", () => {
+              if (window.VisualEditor) {
+                window.VisualEditor.autoFix();
+              }
+            });
+        } else {
+          console.error("❌ Editor visual no disponible");
+        }
+      });
+
+      // Crear escenarios de prueba
+      function createTestScenario1() {
+        // Escenario 1: Solo nodos sin conexiones
+        addMessageNode();
+        addAudioNode();
+        console.log("📋 Escenario 1: Nodos sin inicio y sin conexiones");
+      }
+
+      function createTestScenario2() {
+        // Escenario 2: Nodos con campos vacíos
+        const node1 = window.VisualNodeManager.createNode("send-message", {
+          x: 100,
+          y: 100,
+        });
+        const node2 = window.VisualNodeManager.createNode("send-audio", {
+          x: 300,
+          y: 100,
+        });
+
+        // Conectarlos pero dejar campos vacíos
+        setTimeout(() => {
+          try {
+            window.VisualConnectionManager.createConnection(
+              node1.id,
+              0,
+              node2.id,
+              0
+            );
+            console.log(
+              "📋 Escenario 2: Nodos conectados pero con campos requeridos vacíos"
+            );
+          } catch (e) {
+            console.warn("No se pudo conectar automáticamente");
+          }
+        }, 500);
+      }
+
+      // Botones de escenarios de prueba
+      setTimeout(() => {
+        const actionsDiv = document.querySelector(".test-actions");
+        actionsDiv.innerHTML += `
+                <hr style="width: 100%; margin: 15px 0;">
+                <h3 style="width: 100%; margin: 0 0 15px 0;">🎭 Escenarios de Prueba:</h3>
+                <button class="btn btn-primary" onclick="createTestScenario1()">📋 Sin Inicio + Sin Conexiones</button>
+                <button class="btn btn-primary" onclick="createTestScenario2()">📋 Campos Vacíos</button>
+            `;
+      }, 1000);
+    </script>
+  </body>
+</html>
